@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
-import { getAuth, getToken } from '@clerk/nextjs/server';
+import { getAuth } from '@clerk/nextjs/server';
 
 const SUPABASE_URL = process.env.SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY as string;
@@ -14,7 +14,8 @@ export default async function handler(
   }
 
   const { userId } = getAuth(req);
-  const token = await getToken({ req });
+  // Get Clerk token from Authorization header
+  const token = req.headers.authorization?.replace('Bearer ', '');
 
   if (!userId || !token) {
     return res.status(401).json({ error: 'Unauthorized' });
