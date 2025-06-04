@@ -1,0 +1,175 @@
+[
+  {
+    "id": "GTK-2025-1000",
+    "employee": "Carlos Torres",
+    "date": "2025-01-01",
+    "summary": "Employee was used as a 204-B without a 1723 or higher-level pay.",
+    "articles_violated": [
+      "ELM 437.11",
+      "JCIM",
+      "Article 19"
+    ],
+    "confidence_remedy_A": "80%",
+    "confidence_remedy_B": "41%",
+    "pdf_link": "/grievances/GTK-2025-1000.pdf"
+  },
+  {
+    "id": "GTK-2025-1001",
+    "employee": "Maria Rivera",
+    "date": "2025-01-21",
+    "summary": "SDO made hostile threats about scan rate expectations.",
+    "articles_violated": [
+      "ELM 437.11",
+      "Article 17",
+      "Article 15"
+    ],
+    "confidence_remedy_A": "80%",
+    "confidence_remedy_B": "33%",
+    "pdf_link": "/grievances/GTK-2025-1001.pdf"
+  },
+  {
+    "id": "GTK-2025-1002",
+    "employee": "John Smith",
+    "date": "2025-02-10",
+    "summary": "TACS records were manipulated to hide a 204-B assignment.",
+    "articles_violated": [
+      "Article 5",
+      "ELM 437.11",
+      "Article 17"
+    ],
+    "confidence_remedy_A": "76%",
+    "confidence_remedy_B": "52%",
+    "pdf_link": "/grievances/GTK-2025-1002.pdf"
+  },
+  {
+    "id": "GTK-2025-1003",
+    "employee": "Ana Delgado",
+    "date": "2025-03-02",
+    "summary": "Clerk was denied union time for representation after filing a grievance.",
+    "articles_violated": [
+      "Article 14",
+      "Article 15",
+      "JCIM"
+    ],
+    "confidence_remedy_A": "77%",
+    "confidence_remedy_B": "53%",
+    "pdf_link": "/grievances/GTK-2025-1003.pdf"
+  },
+  {
+    "id": "GTK-2025-1004",
+    "employee": "Jose Santiago",
+    "date": "2025-03-22",
+    "summary": "Management failed to notify the union of staffing changes.",
+    "articles_violated": [
+      "Article 17",
+      "Article 2",
+      "Article 5"
+    ],
+    "confidence_remedy_A": "71%",
+    "confidence_remedy_B": "53%",
+    "pdf_link": "/grievances/GTK-2025-1004.pdf"
+  },
+  {
+    "id": "GTK-2025-1005",
+    "employee": "Elena Cruz",
+    "date": "2025-04-11",
+    "summary": "Clerk was pushed to work OT without OTDL rights being respected.",
+    "articles_violated": [
+      "Article 19",
+      "Article 1.6.A",
+      "Article 15"
+    ],
+    "confidence_remedy_A": "81%",
+    "confidence_remedy_B": "50%",
+    "pdf_link": "/grievances/GTK-2025-1005.pdf"
+  },
+  {
+    "id": "GTK-2025-1006",
+    "employee": "Luis Martinez",
+    "date": "2025-05-01",
+    "summary": "Multiple employees pressured to scan for other tours under threat.",
+    "articles_violated": [
+      "JCIM",
+      "Article 2",
+      "Article 17"
+    ],
+    "confidence_remedy_A": "73%",
+    "confidence_remedy_B": "47%",
+    "pdf_link": "/grievances/GTK-2025-1006.pdf"
+  },
+  {
+    "summary": "Discrimination",
+    "description": "Management refused to provide documentation after repeated RFIs. The supervisor also denied union time twice in a week, and has continued directing mail handler duties in a building assigned to BEMs. Safety logs were never updated after the last HVAC incident.",
+    "grievance_type": "Individual",
+    "files": [],
+    "violations": [
+      {
+        "article_number": "Article 17",
+        "article_title": "Representation",
+        "violation_reason": "Management's refusal to provide documentation after repeated RFIs violates the union's right to information necessary for bargaining and grievance handling."
+      },
+      {
+        "article_number": "Article 10",
+        "article_title": "Leave",
+        "violation_reason": "Denying union time twice in a week infringes on the rights of union representatives to carry out their duties."
+      },
+      {
+        "article_number": "Article 37",
+        "article_title": "Clerk Craft",
+        "violation_reason": "Directing mail handler duties in a building assigned to BEMs is a clear violation of job assignments as outlined in the National Agreement."
+      },
+      {
+        "article_number": "Article 14",
+        "article_title": "Safety and Health",
+        "violation_reason": "Failure to update safety logs after the last HVAC incident is a breach of the management's obligation to ensure a safe and healthy working environment."
+      }
+    ],
+    "status": "Draft",
+    "savedAt": "2025-05-17T04:06:06.654Z"
+  },
+  {
+    "summary": "Discrimination",
+    "description": "Management refused to provide documentation after repeated RFIs. The supervisor also denied union time twice in a week, and has continued directing mail handler duties in a building assigned to BEMs. Safety logs were never updated after the last HVAC incident.",
+    "grievance_type": "Individual",
+    "files": [],
+    "violations": [
+      {
+        "article_number": "Article 17",
+        "article_title": "Representation",
+        "violation_reason": "Management's refusal to provide documentation after repeated RFIs violates the union's right to information necessary for bargaining and grievance handling."
+      },
+      {
+        "article_number": "Article 10",
+        "article_title": "Leave",
+        "violation_reason": "Denying union time twice in a week infringes on the rights of union representatives to carry out their duties."
+      },
+      {
+        "article_number": "Article 37",
+        "article_title": "Clerk Craft",
+        "violation_reason": "Directing mail handler duties in a building assigned to BEMs is a clear violation of job assignments as outlined in the National Agreement."
+      },
+      {
+        "article_number": "Article 14",
+        "article_title": "Safety and Health",
+        "violation_reason": "Failure to update safety logs after the last HVAC incident is a breach of the management's obligation to ensure a safe and healthy working environment."
+      }
+    ],
+    "status": "Draft",
+    "savedAt": "2025-05-17T04:06:10.794Z"
+  },
+  {
+    "summary": "OTDl Violation",
+    "description": "managment bypass me yesterday to give the otdl to the junior employee not on the otdl list",
+    "grievance_type": "Individual",
+    "files": [],
+    "violations": [
+      {
+        "article_number": "Article 8",
+        "article_title": "Hours of Work",
+        "violation_reason": "Management violated this article by not following the appropriate procedures for assigning overtime work, specifically bypassing a senior employee on the OTDL in favor of a junior employee not on the list."
+      }
+    ],
+    "status": "Draft",
+    "savedAt": "2025-05-17T04:54:30.007Z"
+  }
+]

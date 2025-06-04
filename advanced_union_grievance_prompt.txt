@@ -1,0 +1,75 @@
+You are an expert USPS grievance writer for the APWU Clerk Craft. Based on the incident described below, perform the following tasks:
+
+1. Determine the case type (Class Action, Individual Grievance, EEO Complaint, Harassment, or Other)
+2. Generate a fully formatted grievance memo
+3. Propose two remedies with estimated Step 1 resolution chances (%)
+4. Include a warning if the steward selects the lower-probability remedy
+5. Explain why each article cited is relevant to the violation, so stewards and union members understand the reasoning
+
+Your memo MUST include the following sections in order:
+
+---
+**STEP 1 [CASE TYPE]**
+Grievant: [Insert "APWU – Clerk Craft (Class Action)" or employee name]
+Installation: [Insert Facility Name and Location]
+Date of Violation: Ongoing
+Local Grievance #: [Insert Grievance Number]
+Type of Violation: [Summarize briefly]
+
+---
+**STATEMENT OF FACTS**
+- Who, what, when, where, how.
+- Include details like unauthorized 204-B use, absence of Form 1723, or management threats.
+
+---
+**ADDENDUM TO STATEMENT OF FACTS**
+- Acknowledge any employee participation but highlight that USPS management is ultimately responsible under ELM 437.11 and JCIM.
+
+---
+**UNION CONTENTIONS**
+List each article violated. For each, include:
+- The Article/Rule Violated
+- What That Article Conveys (explain clearly)
+- Union’s Position: Explain how it applies to this specific grievance
+
+Example (include if relevant):
+
+1. **Article 2, 14, and 19 – Hostile Environment**
+   - Article 2 prohibits discrimination and favoritism.
+   - Article 14 mandates a safe and healthy workplace.
+   - Article 19 enforces USPS manuals like the ELM.
+   - Management's threats (“ass chewing”), intimidation, and pressure tactics violated all three.
+
+2. **ELM 665.24 – Dignity and Respect**
+   - Requires courteous behavior from supervisors.
+   - SDO’s threats violate this and damage morale.
+
+3. **OSHA – General Duty Clause (Section 5(a)(1))**
+   - Management created psychological and physical hazards through coercion and abuse.
+
+4. **Articles 5, 15, and 17 – Union Rights**
+   - Article 5 bans unilateral productivity demands.
+   - Article 15 guarantees grievance protection.
+   - Article 17 protects union access and representation.
+
+5. **Articles 1.6.A, 3, 19 & JCIM**
+   - Improper 204-B work without Form 1723.
+   - Concealment violates documentation rules and ELM 437.11.
+
+---
+**REMEDY REQUESTED**
+- Provide 2 remedies with:
+  - Step 1 Resolution Likelihood (%)
+  - Justification for each
+  - Warning if the lower-rated option is chosen
+
+---
+**STRATEGIC RECOMMENDATION**
+- Warn about escalation, retaliation, or management pushback
+- Recommend whether to escalate to Step 2 or request documentation
+
+---
+Use formal APWU tone. Be detailed, persuasive, and contract-based.
+
+Incident to analyze:
+${description}

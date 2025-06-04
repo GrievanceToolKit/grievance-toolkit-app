@@ -1,9 +1,11 @@
+# Full corrected version of embed_chunks.py
+corrected_script = """
 #!/usr/bin/env python3
-"""
+\"\"\"
 embed_chunks.py
 
 Production-grade embedding pipeline for Supabase + OpenAI v1.x
-"""
+\"\"\"
 import os
 import sys
 import time
@@ -76,7 +78,7 @@ def embed_text_chunk(client, text, max_retries=5):
         try:
             resp = client.embeddings.create(
                 input=text,
-                model="text-embedding-ada-002"
+                model="text-embedding-3-small"
             )
             return resp.data[0].embedding
         except Exception as e:
@@ -96,24 +98,24 @@ def main():
     start_time = time.time()
     try:
         with conn, conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
-            cur.execute("""
-                SELECT id, text_chunk FROM public.document_chunks
+            cur.execute(\"""
+                SELECT id, content FROM public.usps_manual_chunks
                 WHERE embedding IS NULL
                 ORDER BY id
-            """)
+            \""")
             rows = cur.fetchall()
             total = len(rows)
             logging.info(f"Found {total} chunks to embed.")
             for idx, row in enumerate(rows, 1):
                 chunk_id = row["id"]
-                text = row["text_chunk"]
+                text = row["content"]
                 if not text or not text.strip():
-                    logging.info(f"Skipping empty text_chunk for id={chunk_id}")
+                    logging.info(f"Skipping empty content for id={chunk_id}")
                     continue
                 try:
                     embedding = embed_text_chunk(client, text)
                     cur.execute(
-                        "UPDATE public.document_chunks SET embedding = %s WHERE id = %s",
+                        "UPDATE public.usps_manual_chunks SET embedding = %s WHERE id = %s",
                         (embedding, chunk_id)
                     )
                     success_count += 1
@@ -136,3 +138,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""
+
+# Save the corrected version to a file
+output_path = "/mnt/data/embed_chunks_usps_manual_corrected.py"
+with open(output_path, "w") as f:
+    f.write(corrected_script)
+
+output_path

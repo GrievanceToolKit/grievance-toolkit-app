@@ -1,0 +1,37 @@
+[
+  {
+    "id": "GT-001",
+    "summary": "Management assigned custodial duties to non-maintenance employees during custodians’ leave.",
+    "rewritten_summary": "Custodial tasks were improperly assigned to clerks and mail handlers while regular custodians were on leave. The union was not informed, and no effort was made to find qualified custodians.",
+    "violations": [
+      {
+        "article_number": "Article 1",
+        "article_title": "Union Recognition",
+        "violation_reason": "Management failed to notify the union about changes in work assignments."
+      },
+      {
+        "article_number": "Article 19",
+        "article_title": "Handbooks and Manuals",
+        "violation_reason": "Custodial work covered under MS-47 was assigned to unqualified employees."
+      }
+    ]
+  },
+  {
+    "id": "GT-002",
+    "summary": "Employees pressured to work off the clock before shift start.",
+    "rewritten_summary": "Management instructed clerks to begin work-related tasks before their official clock-in time, without compensation. This practice was not voluntary.",
+    "violations": [
+      {
+        "article_number": "Article 8",
+        "article_title": "Hours of Work",
+        "violation_reason": "Employees were required to perform duties off the clock, which is prohibited."
+      },
+      {
+        "article_number": "FLSA",
+        "article_title": "Fair Labor Standards Act",
+        "violation_reason": "Failure to compensate employees for all hours worked violates federal labor law."
+      }
+    ]
+  }
+]
+ 
