@@ -1,9 +1,7 @@
-import TestComponent from '@/components/TestComponent';
-
 export default function Home() {
   return (
     <main className="p-8">
-      <TestComponent />
+      <h1>Grievance Toolkit - Dashboard Placeholder</h1>
     </main>
   );
 }
