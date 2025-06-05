@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import html2pdf from "html2pdf.js";
 import { useRouter } from 'next/navigation';
 import { logError } from '../../../lib/api';
+import { useAuth } from '@clerk/nextjs';
 
 const ARTICLE_OPTIONS = [
 	{ value: "Article 5", label: "Article 5 – Prohibition of Discrimination" },
@@ -21,6 +22,7 @@ const ARTICLE_OPTIONS = [
 ];
 
 export default function NewGrievancePage() {
+	const { getToken } = useAuth();
 	const [summary, setSummary] = useState("");
 	const [description, setDescription] = useState("");
 	const [date, setDate] = useState("");
@@ -94,7 +96,7 @@ export default function NewGrievancePage() {
 
 		// Full payload
 		const payload = {
-			title: summary.slice(0, 60), // or add a real title field later
+			title: summary.slice(0, 60),
 			summary,
 			description,
 			case_number: caseNumber || `GT-${Date.now()}`,
@@ -112,9 +114,13 @@ export default function NewGrievancePage() {
 		let lastError = null;
 		while (attempt < maxAttempts) {
 			try {
+				const token = await getToken();
 				const res = await fetch(endpoint, {
 					method: "POST",
-					headers: { "Content-Type": "application/json" },
+					headers: {
+						"Content-Type": "application/json",
+						...(token ? { Authorization: `Bearer ${token}` } : {})
+					},
 					body: JSON.stringify(payload),
 				});
 
