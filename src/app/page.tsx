@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 import { useEffect } from "react";
 import { useUser, useAuth } from "@clerk/nextjs";
@@ -35,4 +36,12 @@ export default function AppInitializer() {
   }, [user, isSignedIn]);
 
   return null;
+=======
+export default function Home() {
+  return (
+    <main className="p-8">
+      <h1>Grievance Toolkit - Dashboard Placeholder</h1>
+    </main>
+  );
+>>>>>>> codex/fix-grievance-submission-rls-error
 }

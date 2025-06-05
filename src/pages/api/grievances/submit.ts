@@ -14,6 +14,10 @@ export default async function handler(
   }
 
   const { userId } = getAuth(req);
+<<<<<<< HEAD
+=======
+  // Get Clerk token from Authorization header
+>>>>>>> codex/fix-grievance-submission-rls-error
   const token = req.headers.authorization?.replace('Bearer ', '');
 
   if (!userId || !token) {
