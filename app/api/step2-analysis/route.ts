@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabaseClient";
 import { extractTextFromFile } from "@/lib/extractTextFromFile";
 import OpenAI from "openai";
@@ -23,8 +23,10 @@ Format clearly with bold section headers and contract references.
 `;
 
 export async function POST(request: Request) {
-  const { session } = auth();
-  const role = session?.user?.publicMetadata?.role;
+  // NOTE: Clerk v6+ server-side: auth() returns a promise, use await and session.user
+  const sessionAuth = await auth();
+  // Clerk v6+: role is in sessionAuth.sessionClaims?.publicMetadata?.role, fallback to sessionAuth.sessionClaims?.role
+  const role = sessionAuth.sessionClaims?.publicMetadata?.role || sessionAuth.sessionClaims?.role;
   if (!role) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
     .single();
 
   if (error || !grievance?.step1_memo) {
-    return NextResponse.json({ error: "Grievance not found or missing Step 1 memo" }, { status: 404 });
+    return NextResponse.json({ error: error?.message || "Step 1 memo not found" }, { status: 404 });
   }
 
   const { summary, description, step1_memo } = grievance;

@@ -1,0 +1,130 @@
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:9:65:
+   7 | );
+   8 | 
+>  9 | export async function handleSupabaseInsert(table: string, data: any) {
+     |                                                                 ^
+  10 |   const { error, data: result } = await supabase.from(table).insert(data);
+  11 |   return { error, data: result };
+  12 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:14:66:
+  12 | }
+  13 | 
+> 14 | export async function handleSupabaseUpdate(table: string, match: any, update: any) {
+     |                                                                  ^
+  15 |   const { error, data: result } = await supabase.from(table).update(update).match(match);
+  16 |   return { error, data: result };
+  17 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:14:79:
+  12 | }
+  13 | 
+> 14 | export async function handleSupabaseUpdate(table: string, match: any, update: any) {
+     |                                                                               ^
+  15 |   const { error, data: result } = await supabase.from(table).update(update).match(match);
+  16 |   return { error, data: result };
+  17 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:19:57:
+  17 | }
+  18 | 
+> 19 | export async function logError(endpoint: string, error: any) {
+     |                                                         ^
+  20 |   // Log to Supabase 'error_logs' table for persistent audit
+  21 |   await supabase.from('error_logs').insert({
+  22 |     endpoint,
+
+
+error: 'QRCode' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:2:8:
+  1 | import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+> 2 | import QRCode from 'qrcode';
+    |        ^
+  3 | 
+  4 | export interface GrievancePDFInput {
+  5 |   title: string;
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:21:9:
+  19 | 
+  20 | function drawSectionHeader(
+> 21 |   page: any,
+     |         ^
+  22 |   text: string,
+  23 |   x: number,
+  24 |   y: number,
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:25:9:
+  23 |   x: number,
+  24 |   y: number,
+> 25 |   font: any,
+     |         ^
+  26 |   color: any,
+  27 |   fontSize = 14
+  28 | ) {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:26:10:
+  24 |   y: number,
+  25 |   font: any,
+> 26 |   color: any,
+     |          ^
+  27 |   fontSize = 14
+  28 | ) {
+  29 |   page.drawText(text, { x, y, size: fontSize, font, color });
+
+
+error: 'font' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:33:45:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                             ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:33:51:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                                   ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: 'fontSize' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:33:56:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                                        ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: 'maxWidth' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:33:74:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                                                          ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: 'DATA_PATH' is assigned a value but never used (@typescript-eslint/no-unused-vars) at lib/rag/grievanceRAG.ts:10:7:
+   8 | dotenv.config();
+   9 | 
+> 10 | const DATA_PATH = path.resolve(process.cwd(), 'data/fine_tune_grievances.jsonl');
+     |       ^
+  11 | const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+  12 | 
+  13 | export type GrievanceExample = {
+
+
+13 errors found.

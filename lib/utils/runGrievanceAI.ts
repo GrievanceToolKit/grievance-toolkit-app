@@ -1,9 +1,19 @@
 import { OpenAI } from "openai";
-import { analyzePrompt } from "@/lib/prompts/analyzePrompt";
+import analyzePrompt from "@/lib/prompts/analyzePrompt";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions/completions";
 
-export async function runGrievanceAI(messages: any[]) {
+export interface GrievanceAIPromptMessage {
+  role: "system" | "user";
+  content: string;
+}
+
+export async function runGrievanceAI(messages: GrievanceAIPromptMessage[]) {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const finalMessages: any[] = [analyzePrompt, ...messages];
+  // Only use 'system' and 'user' roles for OpenAI API compatibility
+  const finalMessages: ChatCompletionMessageParam[] = [
+    { role: "system", content: analyzePrompt },
+    ...messages.map((m) => ({ role: m.role, content: m.content }))
+  ];
   const response = await openai.chat.completions.create({
     model: "gpt-4",
     messages: finalMessages,

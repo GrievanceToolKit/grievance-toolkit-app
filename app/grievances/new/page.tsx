@@ -109,7 +109,7 @@ export default function NewGrievancePage() {
 		console.log("📦 Submitting payload:", payload);
 
 		let attempt = 0;
-		let maxAttempts = 3;
+		const maxAttempts = 3;
 		let delay = 500;
 		let lastError = null;
 		while (attempt < maxAttempts) {

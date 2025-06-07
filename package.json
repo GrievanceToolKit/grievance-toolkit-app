@@ -7,10 +7,13 @@
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "lint:fix": "NODE_OPTIONS='--max-old-space-size=8192' eslint . --fix",
+    "lint:report": "NODE_OPTIONS='--max-old-space-size=8192' eslint . --format codeframe > eslint-report-final.txt",
+    "lint:count": "wc -l eslint-report-final.txt"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.19.4",
+    "@clerk/nextjs": "^6.20.2",
     "@headlessui/react": "^2.2.3",
     "@heroicons/react": "^2.2.0",
     "@langchain/community": "^0.3.43",
@@ -18,11 +21,12 @@
     "@langchain/openai": "^0.5.10",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.49.8",
+    "@supabase/supabase-js": "^2.49.10",
     "chart.js": "^4.4.9",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
+    "formidable": "^3.5.4",
     "html2pdf.js": "^0.10.3",
     "langchain": "^0.3.26",
     "mammoth": "^1.9.0",
@@ -34,15 +38,9 @@
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
-<<<<<<< HEAD
     "react-hot-toast": "^2.5.2",
     "resend": "^4.5.1",
     "tesseract.js": "^6.0.1"
-=======
-    "next": "15.3.2",
-    "@clerk/nextjs": "^6.20.2",
-    "@supabase/supabase-js": "^2.49.10"
->>>>>>> codex/fix-grievance-submission-rls-error
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -54,6 +52,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "eslint-formatter-codeframe": "^7.32.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

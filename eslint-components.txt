@@ -1,0 +1,31 @@
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at components/StewardAssistant.tsx:45:14:
+  43 |         setMessages([...newMessages, { role: "assistant" as const, content: "⚠️ Unexpected empty response from AI." }]);
+  44 |       }
+> 45 |     } catch (err) {
+     |              ^
+  46 |       setMessages([
+  47 |         ...newMessages,
+  48 |         { role: "assistant" as const, content: "⚠️ Error contacting the AI." },
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at components/grievances/SendToStewardForm.tsx:14:44:
+  12 | }) {
+  13 |   const { user } = useUser();
+> 14 |   const [stewards, setStewards] = useState<any[]>([]);
+     |                                            ^
+  15 |   const [selectedSteward, setSelectedSteward] = useState<string | null>(null);
+  16 |   const [loading, setLoading] = useState(true);
+  17 |   const [submitting, setSubmitting] = useState(false);
+
+
+error: 'emailErr' is defined but never used (@typescript-eslint/no-unused-vars) at components/grievances/SendToStewardForm.tsx:71:16:
+  69 |           summary: grievanceSummary,
+  70 |         });
+> 71 |       } catch (emailErr) {
+     |                ^
+  72 |         setError('Grievance sent, but failed to send email notification.');
+  73 |         setSubmitting(false);
+  74 |         setSuccess(true);
+
+
+3 errors found.

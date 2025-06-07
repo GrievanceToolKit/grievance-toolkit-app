@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         console.warn(`⚠️ Could not download: ${file.file_name}`);
         continue;
       }
-      let text = await extractTextFromFile(fileBlob, file.file_type);
+      const text = await extractTextFromFile(fileBlob, file.file_type);
       supportingDocuments += `\n\n[${file.file_name}]\n${text}`;
     }
   }

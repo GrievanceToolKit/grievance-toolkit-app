@@ -266,7 +266,7 @@ export default function EscalationPage() {
 
     let combinedText = "";
     let uploadSuccess = true;
-    let uploadMsg = [];
+    const uploadMsg = [];
 
     for (const file of files) {
       // Upload each file to Supabase Storage

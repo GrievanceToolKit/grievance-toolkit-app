@@ -1,15 +1,15 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabaseClient";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { role } = await req.json();
-  const { userId, session } = auth();
-  const email = session?.user?.emailAddresses?.[0]?.emailAddress;
+  const sessionAuth = await auth();
+  const userId = sessionAuth.userId;
 
   const { error } = await supabase
     .from("users")
-    .update({ role, email })
+    .update({ role })
     .eq("id", userId);
 
   if (error) {

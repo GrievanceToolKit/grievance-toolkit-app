@@ -24,7 +24,7 @@ Please log into GrievanceToolkit to review the full escalation memo.
   `;
 
   // Generate PDF if pdfInput is provided
-  let attachments = [];
+  const attachments = [];
   if (pdfInput) {
     const { base64 } = await generateGrievancePDF(pdfInput);
     attachments.push({

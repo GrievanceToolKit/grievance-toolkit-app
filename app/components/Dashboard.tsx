@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowUpRightIcon, DocumentTextIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon, PlusIcon, DocumentIcon, ArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import { Popover, Transition } from '@headlessui/react';
-import { auth, useAuth, useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 
 // Dummy data
 const dummyStats = [
@@ -71,8 +71,8 @@ export default function Dashboard() {
   const getSortedAI = () => {
     if (!sortCol) return visibleAI;
     const sorted = [...visibleAI].sort((a, b) => {
-      let aVal = a[sortCol];
-      let bVal = b[sortCol];
+      const aVal = a[sortCol];
+      const bVal = b[sortCol];
       if (sortCol === 'confidence') {
         const aNum = parseFloat(String(aVal).replace('%', ''));
         const bNum = parseFloat(String(bVal).replace('%', ''));
@@ -113,7 +113,7 @@ export default function Dashboard() {
           <button
             key={r}
             className={`px-3 py-1 rounded text-sm font-semibold border ${role === r ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-300 border-blue-400'} transition`}
-            onClick={() => setRole(r as any)}
+            onClick={() => setRole(r as typeof role)}
           >
             {r.charAt(0).toUpperCase() + r.slice(1)}
           </button>

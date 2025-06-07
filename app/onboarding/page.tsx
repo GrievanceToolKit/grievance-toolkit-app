@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { supabase } from "@/lib/supabaseClient";
-import { extractPdfText } from "@/lib/pdfExtract";
 import { extractDocxText } from "@/lib/docxExtract";
 import { chunkText } from "@/lib/chunkText";
 
@@ -44,13 +43,27 @@ export default function OnboardingPage() {
     }
   };
 
+  // Add client-safe PDF upload and extraction function
+  const uploadPdfAndExtract = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/extract-pdf", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    return data.text;
+  };
+
   const handleLMOUUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     setStatus("Uploading LMOU...");
     let extractedText = "";
     if (file.type === "application/pdf") {
-      extractedText = await extractPdfText(file);
+      extractedText = await uploadPdfAndExtract(file);
     } else if (file.name.endsWith(".docx")) {
       extractedText = await extractDocxText(file);
     } else {

@@ -1,0 +1,900 @@
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/ai-analysis/page.tsx:33:14:
+  31 |         toast.error(data.error || 'AI analysis failed');
+  32 |       }
+> 33 |     } catch (e) {
+     |              ^
+  34 |       toast.error('AI analysis failed');
+  35 |     } finally {
+  36 |       setAiLoading(false);
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/bulk-override/route.ts:65:12:
+  63 |     }
+  64 |     return NextResponse.json({ message: 'Bulk override applied', applied: inserts.length });
+> 65 |   } catch (err) {
+     |            ^
+  66 |     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
+  67 |   }
+  68 | }
+
+
+error: 'Buffer' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/grievance-analysis/route.ts:4:10:
+  2 | import OpenAI from "openai";
+  3 | import { NextResponse, NextRequest } from "next/server";
+> 4 | import { Buffer } from "buffer";
+    |          ^
+  5 | import * as Tesseract from "tesseract.js";
+  6 | import { extractTextFromFile } from "@/lib/extractTextFromFile";
+  7 | import { auth as clerkAuth, getAuth } from "@clerk/nextjs/server";
+
+
+error: 'Tesseract' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/grievance-analysis/route.ts:5:13:
+  3 | import { NextResponse, NextRequest } from "next/server";
+  4 | import { Buffer } from "buffer";
+> 5 | import * as Tesseract from "tesseract.js";
+    |             ^
+  6 | import { extractTextFromFile } from "@/lib/extractTextFromFile";
+  7 | import { auth as clerkAuth, getAuth } from "@clerk/nextjs/server";
+  8 | 
+
+
+error: 'clerkAuth' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/grievance-analysis/route.ts:7:18:
+   5 | import * as Tesseract from "tesseract.js";
+   6 | import { extractTextFromFile } from "@/lib/extractTextFromFile";
+>  7 | import { auth as clerkAuth, getAuth } from "@clerk/nextjs/server";
+     |                  ^
+   8 | 
+   9 | const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  10 | 
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/grievance-analysis/route.ts:41:12:
+  39 |       }
+  40 |     }
+> 41 |   } catch (err) {
+     |            ^
+  42 |     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
+  43 |     if (authHeader && authHeader.startsWith("Bearer ")) {
+  44 |       const jwt = authHeader.replace("Bearer ", "");
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/notify/escalation.ts:10:12:
+   8 |   try {
+   9 |     body = await request.json();
+> 10 |   } catch (e) {
+     |            ^
+  11 |     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  12 |   }
+  13 |   const { grievanceId, stewardEmail, step2Memo } = body;
+
+
+error: 'error' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/notify/escalation.ts:40:12:
+  38 |     });
+  39 |     return NextResponse.json({ success: true, data: response });
+> 40 |   } catch (error) {
+     |            ^
+  41 |     return NextResponse.json({ error: 'Failed to send escalation email.' }, { status: 500 });
+  42 |   }
+  43 | }
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/step2/route.ts:52:12:
+  50 |   try {
+  51 |     body = await request.json();
+> 52 |   } catch (e) {
+     |            ^
+  53 |     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  54 |   }
+  55 |   const { grievanceId, originalMemo, step1Denial, violations = [] } = body;
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/api/step2/route.ts:61:27:
+  59 | 
+  60 |   // RAG: Build unionContentions with contract language for each violation
+> 61 |   const unionContentions: any[] = [];
+     |                           ^
+  62 |   if (Array.isArray(violations) && violations.length > 0) {
+  63 |     for (const v of violations) {
+  64 |       const article = v.article_number;
+
+
+error: 'downloadError' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/api/step3-audit.ts:44:40:
+  42 |       for (const file of files) {
+  43 |         // Download file from Supabase Storage
+> 44 |         const { data: fileBlob, error: downloadError } = await supabase.storage
+     |                                        ^
+  45 |           .from('denials')
+  46 |           .download(file.storage_path || file.file_name);
+  47 |         if (fileBlob) {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/api/step3-audit.ts:59:21:
+  57 |     // Run OpenAI
+  58 |     let auditMemo = '';
+> 59 |     let violations: any[] = [];
+     |                     ^
+  60 |     try {
+  61 |       const aiRes = await openai.chat.completions.create({
+  62 |         model: 'gpt-4',
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/step3-audit.ts:72:14:
+  70 |       // Optionally extract violations (simple regex or section parse)
+  71 |       violations = [];
+> 72 |     } catch (err) {
+     |              ^
+  73 |       return NextResponse.json({ error: 'AI failed to generate audit memo' }, { status: 500 });
+  74 |     }
+  75 | 
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/step3-audit.ts:161:12:
+  159 | 
+  160 |     return NextResponse.json({ auditMemo, violations, forwardedToMBA });
+> 161 |   } catch (err) {
+      |            ^
+  162 |     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+  163 |   }
+  164 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/api/steward-chat/route.ts:21:27:
+  19 |     const chatMessages = [
+  20 |       { role: 'system', content: systemPrompt },
+> 21 |       ...messages.map((m: any) => ({ role: m.role, content: m.content })),
+     |                           ^
+  22 |     ];
+  23 | 
+  24 |     const completion = await openai.chat.completions.create({
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/steward-chat/route.ts:47:12:
+  45 |     return NextResponse.json({ response: reply });
+  46 | 
+> 47 |   } catch (err) {
+     |            ^
+  48 |     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
+  49 |   }
+  50 | }
+
+
+error: 'error' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/api/submit-grievance.ts:20:29:
+  18 |     const jwt = authHeader.replace("Bearer ", "");
+  19 |     // Use Supabase client to get user from JWT
+> 20 |     const { data: { user }, error } = await supabase.auth.getUser(jwt);
+     |                             ^
+  21 |     if (user && user.id) {
+  22 |       supabaseUserId = user.id;
+  23 |     }
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/api/witness/forward.ts:16:12:
+  14 |     const users = await clerk.users.getUserList({ emailAddress: [stewardEmail] });
+  15 |     stewardExists = users.length > 0;
+> 16 |   } catch (e) {
+     |            ^
+  17 |     stewardExists = false;
+  18 |   }
+  19 | 
+
+
+error: 'PlusIcon' is defined but never used (@typescript-eslint/no-unused-vars) at app/components/Dashboard.tsx:5:92:
+  3 | import { useState, useEffect, Fragment } from "react";
+  4 | import { useRouter } from 'next/navigation';
+> 5 | import { ArrowUpRightIcon, DocumentTextIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon, PlusIcon, DocumentIcon, ArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+    |                                                                                            ^
+  6 | import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+  7 | import { Popover, Transition } from '@headlessui/react';
+  8 | import { useUser } from '@clerk/nextjs';
+
+
+error: 'DocumentIcon' is defined but never used (@typescript-eslint/no-unused-vars) at app/components/Dashboard.tsx:5:102:
+  3 | import { useState, useEffect, Fragment } from "react";
+  4 | import { useRouter } from 'next/navigation';
+> 5 | import { ArrowUpRightIcon, DocumentTextIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon, PlusIcon, DocumentIcon, ArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+    |                                                                                                      ^
+  6 | import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+  7 | import { Popover, Transition } from '@headlessui/react';
+  8 | import { useUser } from '@clerk/nextjs';
+
+
+error: 'ArrowUpIcon' is defined but never used (@typescript-eslint/no-unused-vars) at app/components/Dashboard.tsx:5:116:
+  3 | import { useState, useEffect, Fragment } from "react";
+  4 | import { useRouter } from 'next/navigation';
+> 5 | import { ArrowUpRightIcon, DocumentTextIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon, PlusIcon, DocumentIcon, ArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+    |                                                                                                                    ^
+  6 | import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+  7 | import { Popover, Transition } from '@headlessui/react';
+  8 | import { useUser } from '@clerk/nextjs';
+
+
+error: 'UserButton' is defined but never used (@typescript-eslint/no-unused-vars) at app/components/Sidebar.tsx:5:10:
+  3 | import Link from "next/link";
+  4 | import { HomeIcon, ChartBarIcon, UserGroupIcon, Cog8ToothIcon, BookOpenIcon } from "@heroicons/react/24/outline";
+> 5 | import { UserButton } from '@clerk/nextjs';
+    |          ^
+  6 | 
+  7 | export default function Sidebar() {
+  8 |   return (
+
+
+error: An interface declaring no members is equivalent to its supertype (@typescript-eslint/no-empty-object-type) at app/components/ui/input.tsx:4:18:
+  2 | import { cn } from "@/lib/utils";
+  3 | 
+> 4 | export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+    |                  ^
+  5 | 
+  6 | const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
+  7 |   return (
+
+
+error: 'cn' is defined but never used (@typescript-eslint/no-unused-vars) at app/dashboard/analytics/page.tsx:6:10:
+  4 | import { supabase } from '@/lib/supabaseClient';
+  5 | import { Bar } from 'react-chartjs-2';
+> 6 | import { cn } from '@/lib/utils';
+    |          ^
+  7 | import { Button } from '@/components/ui/button';
+  8 | 
+  9 | // --- Types ---
+
+
+error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free (@typescript-eslint/ban-ts-comment) at app/dashboard/history/[id].tsx:6:1:
+  4 | import { supabase } from "@/lib/supabaseClient";
+  5 | import { useUser } from '@clerk/nextjs';
+> 6 | // @ts-ignore
+    | ^
+  7 | import html2pdf from "html2pdf.js";
+  8 | import { toast } from 'react-hot-toast';
+  9 | 
+
+
+error: 'router' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/history/[id].tsx:11:9:
+   9 | 
+  10 | export default function GrievanceDetailPage() {
+> 11 |   const router = useRouter();
+     |         ^
+  12 |   const searchParams = useSearchParams();
+  13 |   const { user } = useUser();
+  14 |   const [grievance, setGrievance] = useState<any>(null);
+
+
+error: 'searchParams' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/history/[id].tsx:12:9:
+  10 | export default function GrievanceDetailPage() {
+  11 |   const router = useRouter();
+> 12 |   const searchParams = useSearchParams();
+     |         ^
+  13 |   const { user } = useUser();
+  14 |   const [grievance, setGrievance] = useState<any>(null);
+  15 |   const [loading, setLoading] = useState(true);
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/history/[id].tsx:14:46:
+  12 |   const searchParams = useSearchParams();
+  13 |   const { user } = useUser();
+> 14 |   const [grievance, setGrievance] = useState<any>(null);
+     |                                              ^
+  15 |   const [loading, setLoading] = useState(true);
+  16 |   const [error, setError] = useState("");
+  17 |   const [files, setFiles] = useState<any[]>([]);
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/history/[id].tsx:17:38:
+  15 |   const [loading, setLoading] = useState(true);
+  16 |   const [error, setError] = useState("");
+> 17 |   const [files, setFiles] = useState<any[]>([]);
+     |                                      ^
+  18 |   const [reanalyzing, setReanalyzing] = useState(false);
+  19 |   const [notes, setNotes] = useState("");
+  20 |   const [savingNotes, setSavingNotes] = useState(false);
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/history/[id].tsx:93:29:
+  91 |       const data = await res.json();
+  92 |       if (data.step2Memo) {
+> 93 |         setGrievance((prev: any) => ({ ...prev, step2_memo: data.step2Memo }));
+     |                             ^
+  94 |       }
+  95 |     } catch (err) {
+  96 |       alert("AI re-analysis failed.");
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/dashboard/history/[id].tsx:95:14:
+  93 |         setGrievance((prev: any) => ({ ...prev, step2_memo: data.step2Memo }));
+  94 |       }
+> 95 |     } catch (err) {
+     |              ^
+  96 |       alert("AI re-analysis failed.");
+  97 |     } finally {
+  98 |       setReanalyzing(false);
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/dashboard/history/[id].tsx:304:22:
+  302 |                 setStep3Status(data.error || '❌ Failed to generate audit.');
+  303 |               }
+> 304 |             } catch (err) {
+      |                      ^
+  305 |               setStep3Status('❌ Error sending to MBA');
+  306 |             } finally {
+  307 |               setStep3Loading(false);
+
+
+error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free (@typescript-eslint/ban-ts-comment) at app/dashboard/history/page.tsx:6:1:
+  4 | import { supabase } from '@/lib/supabaseClient';
+  5 | import { daysRemaining } from '@/lib/daysRemaining';
+> 6 | // @ts-ignore
+    | ^
+  7 | import html2pdf from "html2pdf.js";
+  8 | 
+  9 | export default function GrievanceHistoryPage() {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/history/page.tsx:11:48:
+   9 | export default function GrievanceHistoryPage() {
+  10 |   const { user } = useUser();
+> 11 |   const [grievances, setGrievances] = useState<any[]>([]);
+     |                                                ^
+  12 |   const [loading, setLoading] = useState(true);
+  13 |   const [statusFilter, setStatusFilter] = useState('all');
+  14 |   const [fileCounts, setFileCounts] = useState<{ [id: string]: number }>({});
+
+
+error: 'userLocalId' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/history/page.tsx:17:10:
+  15 |   const [adminView, setAdminView] = useState(false);
+  16 |   const [isAdmin, setIsAdmin] = useState(false);
+> 17 |   const [userLocalId, setUserLocalId] = useState<string | null>(null);
+     |          ^
+  18 | 
+  19 |   useEffect(() => {
+  20 |     async function fetchGrievances() {
+
+
+error: 'error' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/history/page.tsx:69:23:
+  67 |       await Promise.all(grievances.map(async (g) => {
+  68 |         if (!g.id) return;
+> 69 |         const { data, error } = await supabase.storage
+     |                       ^
+  70 |           .from("grievance_files")
+  71 |           .list(`grievance_files/${g.id}`);
+  72 |         counts[g.id] = data?.length || 0;
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/inbox/page.tsx:13:38:
+  11 |   const { user } = useUser();
+  12 |   const router = useRouter();
+> 13 |   const [links, setLinks] = useState<any[]>([]);
+     |                                      ^
+  14 |   const [loading, setLoading] = useState(true);
+  15 |   const [expanded, setExpanded] = useState<string | null>(null);
+  16 |   const [error, setError] = useState('');
+
+
+error: 'setError' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/inbox/page.tsx:16:17:
+  14 |   const [loading, setLoading] = useState(true);
+  15 |   const [expanded, setExpanded] = useState<string | null>(null);
+> 16 |   const [error, setError] = useState('');
+     |                 ^
+  17 |   const [showArchived, setShowArchived] = useState(false);
+  18 |   const [memberInfo, setMemberInfo] = useState<Record<string, { name: string; email: string }>>({});
+  19 | 
+
+
+error: 'error' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/inbox/page.tsx:29:21:
+  27 |         .order('created_at', { ascending: false });
+  28 |       if (!showArchived) query = query.eq('archived_at', null);
+> 29 |       const { data, error } = await query;
+     |                     ^
+  30 |       setLinks(data || []);
+  31 |       setLoading(false);
+  32 |       // Fetch member info for all unique created_by_user_id
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/inbox/page.tsx:34:53:
+  32 |       // Fetch member info for all unique created_by_user_id
+  33 |       if (data) {
+> 34 |         const ids = Array.from(new Set(data.map((l: any) => l.created_by_user_id).filter(Boolean)));
+     |                                                     ^
+  35 |         if (ids.length) {
+  36 |           const { data: users } = await supabase.from('users').select('id, first_name, last_name, email').in('id', ids);
+  37 |           const info: Record<string, { name: string; email: string }> = {};
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/inbox/page.tsx:38:30:
+  36 |           const { data: users } = await supabase.from('users').select('id, first_name, last_name, email').in('id', ids);
+  37 |           const info: Record<string, { name: string; email: string }> = {};
+> 38 |           users?.forEach((u: any) => {
+     |                              ^
+  39 |             info[u.id] = { name: `${u.first_name || ''} ${u.last_name || ''}`.trim(), email: u.email };
+  40 |           });
+  41 |           setMemberInfo(info);
+
+
+error: 'status' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/inbox/page.tsx:92:11:
+  90 |           timeLabel = link.responded_at ? `📤 Responded: ${formatDistanceToNow(new Date(link.responded_at), { addSuffix: true })}` : '';
+  91 |         } else if (link.seen_at) {
+> 92 |           status = 'seen'; badge = '👀 Seen'; badgeClass = 'bg-yellow-100 text-yellow-800'; borderClass = 'border-yellow-300 bg-yellow-50';
+     |           ^
+  93 |           timeLabel = link.seen_at ? `🕓 Viewed: ${formatDistanceToNow(new Date(link.seen_at), { addSuffix: true })}` : '';
+  94 |         }
+  95 | 
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/lmou.tsx:8:36:
+   6 | export default function LMOUViewer() {
+   7 |   const { user } = useUser();
+>  8 |   const [lmou, setLmou] = useState<any>(null);
+     |                                    ^
+   9 |   const [loading, setLoading] = useState(true);
+  10 |   const [error, setError] = useState("");
+  11 |   const [userRole, setUserRole] = useState<string>("");
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/logs/page.tsx:57:95:
+  55 |   });
+  56 | 
+> 57 |   const handleFeedbackChange = (id: string, field: keyof (typeof logFeedback)[string], value: any) => {
+     |                                                                                               ^
+  58 |     setLogFeedback((prev) => ({
+  59 |       ...prev,
+  60 |       [id]: {
+
+
+error: 'rows' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/patterns/page.tsx:41:10:
+  39 | 
+  40 | export default function PatternsPage() {
+> 41 |   const [rows, setRows] = useState<TrainingExample[]>([]);
+     |          ^
+  42 |   const [loading, setLoading] = useState(true);
+  43 |   const [articleCounts, setArticleCounts] = useState<Record<string, number>>({});
+  44 |   const [comboCounts, setComboCounts] = useState<Record<string, number>>({});
+
+
+error: 'error' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/dashboard/queue-management/page.tsx:27:21:
+  25 |     async function fetchCorrections() {
+  26 |       setLoading(true);
+> 27 |       const { data, error } = await supabase
+     |                     ^
+  28 |         .from('ai_training_queue')
+  29 |         .select('*')
+  30 |         .eq('applied_to_model', false)
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/search/page.tsx:7:42:
+   5 | export default function GrievanceSearchPage() {
+   6 |   const [query, setQuery] = useState('');
+>  7 |   const [results, setResults] = useState<any[]>([]);
+     |                                          ^
+   8 |   const [loading, setLoading] = useState(false);
+   9 |   const [error, setError] = useState('');
+  10 | 
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/search/page.tsx:25:19:
+  23 | 
+  24 |       setResults(data.results || []);
+> 25 |     } catch (err: any) {
+     |                   ^
+  26 |       console.error('❌ Search error:', err);
+  27 |       setError(err.message || 'Unexpected error');
+  28 |     } finally {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/dashboard/search/page.tsx:62:44:
+  60 |               <p className="font-medium mb-1 text-blue-900">{result.rewritten_summary}</p>
+  61 |               <ul className="list-disc ml-6 text-sm text-gray-800">
+> 62 |                 {result.violations.map((v: any, i: number) => (
+     |                                            ^
+  63 |                   <li key={i}>
+  64 |                     <strong>{v.article_number}:</strong> {v.article_title} — {v.violation_reason}
+  65 |                   </li>
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/dashboard/steward-assistant/page.tsx:39:12:
+  37 | 			if (!data.reply) throw new Error('No response from assistant');
+  38 | 			setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
+> 39 | 		} catch (e) {
+     | 		         ^
+  40 | 			setError('Failed to get response. Please try again.');
+  41 | 		} finally {
+  42 | 			setLoading(false);
+
+
+error: 'useEffect' is defined but never used (@typescript-eslint/no-unused-vars) at app/dashboard/witness-review/page.tsx:3:10:
+  1 | "use client";
+  2 | import { useUser } from '@clerk/nextjs';
+> 3 | import { useEffect, useState } from 'react';
+    |          ^
+  4 | 
+  5 | const mockStatements = [
+  6 |   {
+
+
+error: 'generateGrievancePDF' is defined but never used (@typescript-eslint/no-unused-vars) at app/grievances/new/page.tsx:4:10:
+  2 | import { useState } from "react";
+  3 | import FileDropzone from "../../components/FileDropzone";
+> 4 | import { generateGrievancePDF } from "../../../lib/pdf/generator";
+    |          ^
+  5 | import { toast } from "react-hot-toast";
+  6 | import html2pdf from "html2pdf.js";
+  7 | import { useRouter } from 'next/navigation';
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/grievances/new/page.tsx:63:12:
+  61 | 				toast.error(data.error || "AI analysis failed");
+  62 | 			}
+> 63 | 		} catch (e) {
+     | 		         ^
+  64 | 			setError("AI analysis failed");
+  65 | 			toast.error("AI analysis failed");
+  66 | 		} finally {
+
+
+error: 'formattedViolations' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/grievances/new/page.tsx:171:8:
+  169 | 
+  170 | 
+> 171 | 	const formattedViolations = articles.map((a) => {
+      | 	      ^
+  172 | 	  // Try to split article number and title if possible
+  173 | 	  const match = a.match(/^(Article [^\s]+|ELM [^\s]+)\s*[-–—:]?\s*(.*)$/);
+  174 | 	  return match
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/grievances/new/page.tsx:216:12:
+  214 | 			  .save()
+  215 | 			  .then(() => document.body.removeChild(wrapper));
+> 216 | 		} catch (e) {
+      | 		         ^
+  217 | 			setError("PDF export failed");
+  218 | 		}
+  219 | 	};
+
+
+error: 'logGrievanceSearch' is defined but never used (@typescript-eslint/no-unused-vars) at app/grievances/new/page.tsx:222:17:
+  220 | 
+  221 | 	// Utility to log grievance search queries (for analytics/audit)
+> 222 | 	async function logGrievanceSearch(queryText: string, matchedArticles: string[], aiSummary: string) {
+      | 	               ^
+  223 | 		try {
+  224 | 			await fetch("/api/grievance-search-log", {
+  225 | 				method: "POST",
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at app/onboarding/role-select.tsx:59:15:
+  57 | 			setSuccess('Role updated! Redirecting...');
+  58 | 			setTimeout(() => router.push('/dashboard'), 1000);
+> 59 | 		} catch (e: any) {
+     | 		            ^
+  60 | 			console.error("❌ Failed to update role:", e);
+  61 | 			setError('Failed to update role.');
+  62 | 		} finally {
+
+
+error: 'useState' is defined but never used (@typescript-eslint/no-unused-vars) at app/page.tsx:3:10:
+  1 | 'use client';
+  2 | import { useRouter } from 'next/navigation';
+> 3 | import { useState } from 'react';
+    |          ^
+  4 | import {
+  5 |   DocumentTextIcon,
+  6 |   ArrowUpRightIcon,
+
+
+error: 'mockUsers' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/reportes/page.tsx:8:7:
+   6 | registerChartModules(); // Call before rendering <Bar />
+   7 | 
+>  8 | const mockUsers = [
+     |       ^
+   9 |   { name: 'Ricardo Parra', role: 'Admin', email: 'ricardo@example.com', status: 'Active' },
+  10 |   { name: 'Jose Santiago', role: 'Steward', email: 'jose@example.com', status: 'Active' },
+  11 |   { name: 'Maria Lopez', role: 'Member', email: 'maria@example.com', status: 'Disabled' },
+
+
+error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free (@typescript-eslint/ban-ts-comment) at app/step2/page.tsx:3:1:
+  1 | "use client";
+  2 | import React, { useState, useEffect } from "react";
+> 3 | // @ts-ignore
+    | ^
+  4 | import html2pdf from "html2pdf.js";
+  5 | import { createClient } from "@supabase/supabase-js";
+  6 | 
+
+
+error: 'file' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:8:31:
+   6 | 
+   7 | // Extraction helpers (to be replaced with real implementations or API calls)
+>  8 | async function extractPdfText(file: File): Promise<string> {
+     |                               ^
+   9 |   // TODO: Implement PDF text extraction (e.g., via API route or pdf.js)
+  10 |   return "[PDF text extraction not yet implemented]";
+  11 | }
+
+
+error: 'file' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:13:41:
+  11 | }
+  12 | 
+> 13 | async function extractTextWithTesseract(file: File): Promise<string> {
+     |                                         ^
+  14 |   // TODO: Implement OCR with tesseract.js
+  15 |   return "[Image OCR extraction not yet implemented]";
+  16 | }
+
+
+error: 'file' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:18:32:
+  16 | }
+  17 | 
+> 18 | async function extractDocxText(file: File): Promise<string> {
+     |                                ^
+  19 |   // TODO: Implement DOCX extraction (e.g., with mammoth.js)
+  20 |   return "[DOCX text extraction not yet implemented]";
+  21 | }
+
+
+error: 'splitMemoSections' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:23:10:
+  21 | }
+  22 | 
+> 23 | function splitMemoSections(memo: string) {
+     |          ^
+  24 |   // Split by markdown headings (e.g., /^\d+\. / or /^#+ /)
+  25 |   const lines = memo.split("\n");
+  26 |   const sections: { heading: string; content: string }[] = [];
+
+
+error: 'saveStatus' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:59:10:
+  57 |   const [loading, setLoading] = useState(false);
+  58 |   const [error, setError] = useState("");
+> 59 |   const [saveStatus, setSaveStatus] = useState("");
+     |          ^
+  60 |   const [uploadedText, setUploadedText] = useState("");
+  61 |   const [uploadStatus, setUploadStatus] = useState<'success' | 'error' | null>(null);
+  62 |   const [uploadMessage, setUploadMessage] = useState('');
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:90:16:
+  88 |           setFileListError("");
+  89 |         }
+> 90 |       } catch (err) {
+     |                ^
+  91 |         setFileListError("Error fetching files");
+  92 |         setFileList([]);
+  93 |       }
+
+
+warning: React Hook useEffect has missing dependencies: 'autoExportEnabled' and 'handleExportPDF'. Either include them or remove the dependency array (react-hooks/exhaustive-deps) at app/step2/page.tsx:122:6:
+  120 |       setAutoExportEnabled(false);
+  121 |     }
+> 122 |   }, [step2Memo]);
+      |      ^
+  123 | 
+  124 |   async function handleSubmit(e: React.FormEvent) {
+  125 |     e.preventDefault();
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:147:14:
+  145 |         setError("No Step 2 memo returned.");
+  146 |       }
+> 147 |     } catch (err) {
+      |              ^
+  148 |       setError("Error generating Step 2 memo.");
+  149 |     } finally {
+  150 |       setLoading(false);
+
+
+error: 'handleSaveToSupabase' is defined but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:169:18:
+  167 |   };
+  168 | 
+> 169 |   async function handleSaveToSupabase() {
+      |                  ^
+  170 |     setSaveStatus("Saving...");
+  171 |     try {
+  172 |       const { data, error } = await supabase
+
+
+error: 'data' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:172:15:
+  170 |     setSaveStatus("Saving...");
+  171 |     try {
+> 172 |       const { data, error } = await supabase
+      |               ^
+  173 |         .from('grievances')
+  174 |         .update({
+  175 |           step2_memo: step2Memo,
+
+
+error: 'handleFileUpload' is assigned a value but never used (@typescript-eslint/no-unused-vars) at app/step2/page.tsx:222:9:
+  220 |   }
+  221 | 
+> 222 |   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      |         ^
+  223 |     const file = e.target.files?.[0];
+  224 |     if (!file) return;
+  225 | 
+
+
+error: 'e' is defined but never used (@typescript-eslint/no-unused-vars) at app/witness-form/page.tsx:50:14:
+  48 |       if (res.ok) setEmailStatus('Email sent successfully!');
+  49 |       else setEmailStatus(data.error || 'Failed to send email');
+> 50 |     } catch (e) {
+     |              ^
+  51 |       setEmailStatus('Failed to send email');
+  52 |     } finally {
+  53 |       setLoading(false);
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at components/StewardAssistant.tsx:45:14:
+  43 |         setMessages([...newMessages, { role: "assistant" as const, content: "⚠️ Unexpected empty response from AI." }]);
+  44 |       }
+> 45 |     } catch (err) {
+     |              ^
+  46 |       setMessages([
+  47 |         ...newMessages,
+  48 |         { role: "assistant" as const, content: "⚠️ Error contacting the AI." },
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at components/grievances/SendToStewardForm.tsx:14:44:
+  12 | }) {
+  13 |   const { user } = useUser();
+> 14 |   const [stewards, setStewards] = useState<any[]>([]);
+     |                                            ^
+  15 |   const [selectedSteward, setSelectedSteward] = useState<string | null>(null);
+  16 |   const [loading, setLoading] = useState(true);
+  17 |   const [submitting, setSubmitting] = useState(false);
+
+
+error: 'emailErr' is defined but never used (@typescript-eslint/no-unused-vars) at components/grievances/SendToStewardForm.tsx:71:16:
+  69 |           summary: grievanceSummary,
+  70 |         });
+> 71 |       } catch (emailErr) {
+     |                ^
+  72 |         setError('Grievance sent, but failed to send email notification.');
+  73 |         setSubmitting(false);
+  74 |         setSuccess(true);
+
+
+error: An interface declaring no members is equivalent to its supertype (@typescript-eslint/no-empty-object-type) at components/ui/input.tsx:3:18:
+  1 | import * as React from "react";
+  2 | 
+> 3 | export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+    |                  ^
+  4 | 
+  5 | export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  6 |   ({ className, type = "text", ...props }, ref) => {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:9:65:
+   7 | );
+   8 | 
+>  9 | export async function handleSupabaseInsert(table: string, data: any) {
+     |                                                                 ^
+  10 |   const { error, data: result } = await supabase.from(table).insert(data);
+  11 |   return { error, data: result };
+  12 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:14:66:
+  12 | }
+  13 | 
+> 14 | export async function handleSupabaseUpdate(table: string, match: any, update: any) {
+     |                                                                  ^
+  15 |   const { error, data: result } = await supabase.from(table).update(update).match(match);
+  16 |   return { error, data: result };
+  17 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:14:79:
+  12 | }
+  13 | 
+> 14 | export async function handleSupabaseUpdate(table: string, match: any, update: any) {
+     |                                                                               ^
+  15 |   const { error, data: result } = await supabase.from(table).update(update).match(match);
+  16 |   return { error, data: result };
+  17 | }
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/api.ts:19:57:
+  17 | }
+  18 | 
+> 19 | export async function logError(endpoint: string, error: any) {
+     |                                                         ^
+  20 |   // Log to Supabase 'error_logs' table for persistent audit
+  21 |   await supabase.from('error_logs').insert({
+  22 |     endpoint,
+
+
+error: 'QRCode' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:2:8:
+  1 | import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+> 2 | import QRCode from 'qrcode';
+    |        ^
+  3 | 
+  4 | export interface GrievancePDFInput {
+  5 |   title: string;
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:21:9:
+  19 | 
+  20 | function drawSectionHeader(
+> 21 |   page: any,
+     |         ^
+  22 |   text: string,
+  23 |   x: number,
+  24 |   y: number,
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:25:9:
+  23 |   x: number,
+  24 |   y: number,
+> 25 |   font: any,
+     |         ^
+  26 |   color: any,
+  27 |   fontSize = 14
+  28 | ) {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:26:10:
+  24 |   y: number,
+  25 |   font: any,
+> 26 |   color: any,
+     |          ^
+  27 |   fontSize = 14
+  28 | ) {
+  29 |   page.drawText(text, { x, y, size: fontSize, font, color });
+
+
+error: 'font' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:33:45:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                             ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: Unexpected any. Specify a different type (@typescript-eslint/no-explicit-any) at lib/pdf/generator.ts:33:51:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                                   ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: 'fontSize' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:33:56:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                                        ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: 'maxWidth' is defined but never used (@typescript-eslint/no-unused-vars) at lib/pdf/generator.ts:33:74:
+  31 | }
+  32 | 
+> 33 | function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+     |                                                                          ^
+  34 |   // Simple markdown: #, ##, **bold**, `code`, > quote
+  35 |   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
+  36 |   text.split(/\r?\n/).forEach(line => {
+
+
+error: 'DATA_PATH' is assigned a value but never used (@typescript-eslint/no-unused-vars) at lib/rag/grievanceRAG.ts:10:7:
+   8 | dotenv.config();
+   9 | 
+> 10 | const DATA_PATH = path.resolve(process.cwd(), 'data/fine_tune_grievances.jsonl');
+     |       ^
+  11 | const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+  12 | 
+  13 | export type GrievanceExample = {
+
+
+error: 'err' is defined but never used (@typescript-eslint/no-unused-vars) at pages/api/grievances/save-draft.ts:18:12:
+  16 |       return res.status(400).json({ error: "Missing field" });
+  17 |     }
+> 18 |   } catch (err) {
+     |            ^
+  19 |     return res.status(400).json({ error: "Invalid JSON" });
+  20 |   }
+  21 | 
+
+
+89 errors and 1 warning found.

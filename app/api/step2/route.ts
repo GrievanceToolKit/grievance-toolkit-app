@@ -72,7 +72,7 @@ export async function POST(request: Request) {
   }
 
   // RAG: Fetch contract language for each violation/article if present
-  let ragSnippets: string[] = [];
+  const ragSnippets: string[] = [];
   if (Array.isArray(violations) && violations.length > 0) {
     for (const v of violations) {
       const articleTitle = v.article_title || v.article_number || v;
