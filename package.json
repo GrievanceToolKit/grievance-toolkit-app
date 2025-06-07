@@ -4,13 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:turbo": "next dev --turbo",
     "build": "NEXT_IGNORE_ESLINT=true next build",
     "start": "next start",
-    "lint": "eslint .",
-    "lint:fix": "NODE_OPTIONS='--max-old-space-size=8192' eslint . --fix",
-    "lint:report": "NODE_OPTIONS='--max-old-space-size=8192' eslint . --format codeframe > eslint-report-final.txt",
-    "lint:count": "wc -l eslint-report-final.txt"
+    "lint": "next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.20.2",
