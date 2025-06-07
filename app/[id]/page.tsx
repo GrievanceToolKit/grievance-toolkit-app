@@ -4,13 +4,14 @@ export const metadata: Metadata = {
   title: "Grievance Details",
 };
 
-interface PageProps {
+type PageProps = {
   params: {
     id: string;
   };
-}
+};
 
-export default function Page({ params }: PageProps) {
+// ✅ Async function required for dynamic params (Server Component)
+export default async function Page({ params }: PageProps) {
   const { id } = params;
 
   return (
