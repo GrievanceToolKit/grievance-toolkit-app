@@ -1,3 +1,1 @@
-{
-  "ignoreCommand": "echo '✅ Ignoring ESLint in Vercel pre-beta build...'"
-}
+{}

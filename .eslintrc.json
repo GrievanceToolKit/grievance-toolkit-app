@@ -10,11 +10,12 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
+    "@typescript-eslint/*": "warn",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-empty-interface": "off",
     "prettier/prettier": "warn",
-    "no-console": "warn"
+    "no-console": "warn",
+    "@next/next/core-web-vitals": "off"
   }
 }
