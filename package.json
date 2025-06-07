@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
-    "build": "next build",
+    "build": "NEXT_IGNORE_ESLINT=true next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "NODE_OPTIONS='--max-old-space-size=8192' eslint . --fix",

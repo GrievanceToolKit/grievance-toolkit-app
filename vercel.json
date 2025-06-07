@@ -1,1 +1,8 @@
-{ "build": { "env": { "NEXT_IGNORE_ESLINT": "true" } } }
+{
+  "build": {
+    "env": {
+      "NEXT_IGNORE_ESLINT": "true"
+    },
+    "command": "npm run build"
+  }
+}
