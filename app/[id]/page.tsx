@@ -1,9 +1,23 @@
-export default function GrievancePage({ params }: { params: { id: string } }) {
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Grievance Details",
+};
+
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
+  const { id } = params;
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">📄 Grievance ID: {params.id}</h1>
+      <h1 className="text-2xl font-bold">📄 Grievance ID: {id}</h1>
       <p className="text-base text-gray-600 mt-2">
-        Details for grievance <strong>{params.id}</strong> will appear here once loaded.
+        This is a placeholder for grievance <strong>{id}</strong>. Details will load dynamically in a future update.
       </p>
     </div>
   );
