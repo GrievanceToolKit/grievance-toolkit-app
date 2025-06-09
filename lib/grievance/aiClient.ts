@@ -1,10 +1,8 @@
-import type { AssistantResponse } from "@/components/StewardAssistant";
-
 /**
  * Formats the AI prompt for consistency and calls the backend API for analysis.
  * Returns the parsed response or throws on error.
  */
-export async function analyzeGrievance(summary: string, description: string, grievanceId?: string): Promise<AssistantResponse> {
+export async function analyzeGrievance(summary: string, description: string, grievanceId?: string): Promise<any> {
   const prompt = `\nYou are a grievance analyst.\nSummary: ${summary}\nDescription: ${description}\nFormat: {\n  \"summary\": \"...\",\n  \"detectedViolations\": [ ... ],\n  \"recommendedActions\": \"...\"\n}\nOnly return valid JSON. No markdown or code blocks.`;
 
   const res = await fetch("/api/assistant/route", {

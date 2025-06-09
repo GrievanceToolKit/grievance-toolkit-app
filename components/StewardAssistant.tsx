@@ -9,7 +9,13 @@ interface Message {
   content: string;
 }
 
-export default function StewardAssistant() {
+interface StewardAssistantProps {
+  summary: string;
+  description: string;
+  grievanceId: string;
+}
+
+export default function StewardAssistant({ summary, description, grievanceId }: StewardAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);

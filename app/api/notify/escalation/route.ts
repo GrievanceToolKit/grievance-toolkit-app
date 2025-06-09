@@ -26,12 +26,13 @@ Please log into GrievanceToolkit to review the full escalation memo.
   // Generate PDF if pdfInput is provided
   const attachments = [];
   if (pdfInput) {
-    const { base64 } = await generateGrievancePDF(pdfInput);
+    const pdfBuffer = await generateGrievancePDF(pdfInput);
+    const base64 = pdfBuffer.toString("base64");
     attachments.push({
       filename: `step2_grievance_${grievanceId}.pdf`,
       content: base64,
-      contentType: 'application/pdf',
-      encoding: 'base64',
+      type: "application/pdf",
+      disposition: "attachment",
     });
   }
 

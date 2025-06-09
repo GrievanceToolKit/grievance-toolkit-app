@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { daysRemaining } from '@/lib/daysRemaining';
 // @ts-ignore
 import html2pdf from "html2pdf.js";
+import Link from "next/link";
 
 export default function GrievanceHistoryPage() {
   const { user } = useUser();
@@ -165,9 +166,12 @@ export default function GrievanceHistoryPage() {
                 📄 Download Memo PDF
               </button>
             )}
-            <button className="text-blue-500 text-sm underline hover:text-blue-700">
+            <Link
+              href={`/grievance/details?id=${g.id}`}
+              className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+            >
               View Details
-            </button>
+            </Link>
           </div>
         </div>
       ))}

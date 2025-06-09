@@ -3,6 +3,7 @@ import { useState } from "react";
 import FileDropzone from "../../components/FileDropzone";
 import { generateGrievancePDF } from "../../../lib/pdf/generator";
 import { toast } from "react-hot-toast";
+// @ts-ignore
 import html2pdf from "html2pdf.js";
 import { useRouter } from 'next/navigation';
 import { logError } from '../../../lib/api';

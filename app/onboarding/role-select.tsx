@@ -43,8 +43,8 @@ export default function RoleSelect() {
 		setLoading(true);
 
 		try {
-			// ✅ Clerk: Update publicMetadata
-			const updatedUser = await user?.update({ publicMetadata: { role } });
+			// ✅ Clerk: Update unsafeMetadata
+			const updatedUser = await user?.update({ unsafeMetadata: { role } });
 			console.log("✅ Clerk metadata updated:", updatedUser?.publicMetadata);
 
 			// ✅ Supabase: Sync role

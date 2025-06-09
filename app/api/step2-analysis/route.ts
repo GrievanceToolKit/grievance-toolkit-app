@@ -22,11 +22,19 @@ Use professional, persuasive, and factual language.
 Format clearly with bold section headers and contract references.
 `;
 
+// Define the interface for Clerk session claims
+interface SessionClaims {
+  publicMetadata?: {
+    role?: string;
+  };
+  role?: string; // fallback if Clerk metadata is flat
+}
+
 export async function POST(request: Request) {
   // NOTE: Clerk v6+ server-side: auth() returns a promise, use await and session.user
   const sessionAuth = await auth();
-  // Clerk v6+: role is in sessionAuth.sessionClaims?.publicMetadata?.role, fallback to sessionAuth.sessionClaims?.role
-  const role = sessionAuth.sessionClaims?.publicMetadata?.role || sessionAuth.sessionClaims?.role;
+  const claims = sessionAuth.sessionClaims as SessionClaims;
+  const role = claims?.publicMetadata?.role || claims?.role;
   if (!role) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }

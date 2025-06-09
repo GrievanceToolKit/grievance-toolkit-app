@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import sgMail from '@sendgrid/mail';
-import { Clerk } from '@clerk/clerk-sdk-node';
+
+// Use require for Clerk to avoid type errors
+const Clerk = require('@clerk/clerk-sdk-node');
+const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY! });
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY! });
 
 export async function POST(req: Request) {
   const { memberName, stewardEmail, pdfBuffer } = await req.json();
@@ -36,7 +38,7 @@ export async function POST(req: Request) {
     html: `<p>Member <strong>${memberName}</strong> has submitted a witness statement.</p>${joinLink ? `<p>Join here: <a href='${joinLink}'>${joinLink}</a></p>` : ''}`,
     attachments: [
       {
-        content: pdfBuffer,
+        content: Buffer.from(pdfBuffer, 'base64').toString('base64'),
         filename: 'witness-statement.pdf',
         type: 'application/pdf',
         disposition: 'attachment',

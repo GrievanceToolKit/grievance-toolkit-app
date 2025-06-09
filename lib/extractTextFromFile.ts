@@ -16,7 +16,7 @@ export async function extractTextFromFile(fileBlob: Blob, fileType: string): Pro
       return parsed.text;
     } else if (fileType === 'docx') {
       const mammoth = await import('mammoth');
-      const result = await mammoth.extractRawText({ buffer: new Uint8Array(buffer) });
+      const result = await mammoth.extractRawText({ buffer: Buffer.from(buffer) });
       return result.value;
     } else {
       // Fallback to OCR for images or unknown types

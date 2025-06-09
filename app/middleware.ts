@@ -1,25 +1,12 @@
-import { authMiddleware } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { clerkMiddleware } from '@clerk/nextjs/server';
 
-export default authMiddleware({
-  publicRoutes: ["/", "/sign-in", "/sign-up", "/unauthorized"],
-  afterAuth(auth, req) {
-    const role = auth.session?.user?.publicMetadata?.role;
-    const path = req.nextUrl.pathname;
-
-    if (path.startsWith("/dashboard") && !["admin", "steward"].includes(role)) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-    if (path.startsWith("/admin") && role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-    if ((path.startsWith("/submit") || path.startsWith("/grievance-analysis")) && !["admin", "steward"].includes(role)) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-    return NextResponse.next();
-  },
-});
+export default clerkMiddleware();
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/submit/:path*", "/grievance-analysis/:path*"]
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
 };
