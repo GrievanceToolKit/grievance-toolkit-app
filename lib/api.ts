@@ -6,17 +6,17 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_KEY!
 );
 
-export async function handleSupabaseInsert(table: string, data: any) {
+export async function handleSupabaseInsert(table: string, data: Record<string, unknown>) {
   const { error, data: result } = await supabase.from(table).insert(data);
   return { error, data: result };
 }
 
-export async function handleSupabaseUpdate(table: string, match: any, update: any) {
+export async function handleSupabaseUpdate(table: string, match: Record<string, unknown>, update: Record<string, unknown>) {
   const { error, data: result } = await supabase.from(table).update(update).match(match);
   return { error, data: result };
 }
 
-export async function logError(endpoint: string, error: any) {
+export async function logError(endpoint: string, error: unknown) {
   // Log to Supabase 'error_logs' table for persistent audit
   await supabase.from('error_logs').insert({
     endpoint,

@@ -3,9 +3,18 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useUser } from "@clerk/nextjs";
 
+interface LMOU {
+  id: string;
+  status?: string;
+  uploaded_at?: string;
+  uploaded_by_user_id?: string;
+  extracted_text?: string;
+  file_url?: string;
+}
+
 export default function LMOUViewer() {
   const { user } = useUser();
-  const [lmou, setLmou] = useState<any>(null);
+  const [lmou, setLmou] = useState<LMOU | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userRole, setUserRole] = useState<string>("");
@@ -105,12 +114,12 @@ export default function LMOUViewer() {
           <div className="mb-2 flex flex-col gap-1">
             {lmou.uploaded_at && (
               <p className="text-sm text-gray-600">
-                Uploaded on {new Date(lmou.uploaded_at).toLocaleDateString()} by {uploaderName || lmou.uploaded_by_user_id || "Unknown"}
+                Uploaded on {lmou.uploaded_at ? new Date(lmou.uploaded_at).toLocaleDateString() : "Unknown"} by {uploaderName || lmou.uploaded_by_user_id || "Unknown"}
               </p>
             )}
             <p className="text-sm text-gray-600">{chunkCount} contract chunks available for AI</p>
           </div>
-          <pre className="max-h-96 overflow-y-auto border p-4 bg-gray-50 mb-4">{lmou.extracted_text}</pre>
+          <pre className="max-h-96 overflow-y-auto border p-4 bg-gray-50 mb-4">{lmou.extracted_text || ''}</pre>
           {lmou.file_url && (
             <a
               href={`${bucketUrl}/${lmou.file_url}`}

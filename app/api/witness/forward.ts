@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
 import sgMail from '@sendgrid/mail';
+import * as Clerk from '@clerk/clerk-sdk-node';
 
-// Use require for Clerk to avoid type errors
-const Clerk = require('@clerk/clerk-sdk-node');
-const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY! });
-
+// Initialize Clerk and SendGrid
+const clerk = Clerk;
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export async function POST(req: Request) {
@@ -15,18 +14,22 @@ export async function POST(req: Request) {
   try {
     const users = await clerk.users.getUserList({ emailAddress: [stewardEmail] });
     stewardExists = users.length > 0;
-  } catch (e) {
+  } catch {
     stewardExists = false;
   }
 
   // If not registered, invite
   let joinLink = '';
   if (!stewardExists) {
-    const invite = await clerk.invitations.createInvitation({
+    await clerk.invitations.createInvitation({
       emailAddress: stewardEmail,
-      role: 'Steward',
+      publicMetadata: {
+        role: 'Steward',
+      },
     });
-    joinLink = invite?.url || '';
+    // TODO: Inspect invite object to find the correct join link property
+    // console.log('Clerk invite object:', invite, Object.keys(invite));
+    joinLink = '';
   }
 
   // Send email

@@ -4,6 +4,13 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { sendUnionLinkEmail } from '@/lib/sendUnionLinkEmail';
 
+interface Steward {
+  id: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+}
+
 export default function SendToStewardForm({ grievanceId, localId, grievanceSummary, grievanceDescription }: {
   grievanceId: string;
   localId: string;
@@ -11,7 +18,7 @@ export default function SendToStewardForm({ grievanceId, localId, grievanceSumma
   grievanceDescription: string;
 }) {
   const { user } = useUser();
-  const [stewards, setStewards] = useState<any[]>([]);
+  const [stewards, setStewards] = useState<Steward[]>([]);
   const [selectedSteward, setSelectedSteward] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -68,7 +75,7 @@ export default function SendToStewardForm({ grievanceId, localId, grievanceSumma
           fromName,
           summary: grievanceSummary,
         });
-      } catch (emailErr) {
+      } catch {
         setError('Grievance sent, but failed to send email notification.');
         setSubmitting(false);
         setSuccess(true);

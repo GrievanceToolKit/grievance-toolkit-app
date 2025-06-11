@@ -1,46 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
-// @ts-ignore
-import html2pdf from "html2pdf.js";
+import React, { useState, useEffect, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 // Extraction helpers (to be replaced with real implementations or API calls)
-async function extractPdfText(file: File): Promise<string> {
+async function extractPdfText(): Promise<string> {
   // TODO: Implement PDF text extraction (e.g., via API route or pdf.js)
   return "[PDF text extraction not yet implemented]";
 }
 
-async function extractTextWithTesseract(file: File): Promise<string> {
+async function extractTextWithTesseract(): Promise<string> {
   // TODO: Implement OCR with tesseract.js
   return "[Image OCR extraction not yet implemented]";
 }
 
-async function extractDocxText(file: File): Promise<string> {
+async function extractDocxText(): Promise<string> {
   // TODO: Implement DOCX extraction (e.g., with mammoth.js)
   return "[DOCX text extraction not yet implemented]";
-}
-
-function splitMemoSections(memo: string) {
-  // Split by markdown headings (e.g., /^\d+\. / or /^#+ /)
-  const lines = memo.split("\n");
-  const sections: { heading: string; content: string }[] = [];
-  let currentHeading = "";
-  let currentContent = [];
-  for (const line of lines) {
-    if (/^\d+\.\s|^#+\s/.test(line)) {
-      if (currentHeading) {
-        sections.push({ heading: currentHeading, content: currentContent.join("\n").trim() });
-      }
-      currentHeading = line.replace(/^#+\s/, "").trim();
-      currentContent = [];
-    } else {
-      currentContent.push(line);
-    }
-  }
-  if (currentHeading) {
-    sections.push({ heading: currentHeading, content: currentContent.join("\n").trim() });
-  }
-  return sections;
 }
 
 const supabase = createClient(
@@ -56,7 +31,6 @@ export default function EscalationPage() {
   const [rawOutput, setRawOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [saveStatus, setSaveStatus] = useState("");
   const [uploadedText, setUploadedText] = useState("");
   const [uploadStatus, setUploadStatus] = useState<'success' | 'error' | null>(null);
   const [uploadMessage, setUploadMessage] = useState('');
@@ -84,10 +58,10 @@ export default function EscalationPage() {
           setFileListError("Error fetching files: " + error.message);
           setFileList([]);
         } else if (files) {
-          setFileList(files.map(f => f.name));
+          setFileList(files.map((f: { name: string }) => f.name));
           setFileListError("");
         }
-      } catch (err) {
+      } catch {
         setFileListError("Error fetching files");
         setFileList([]);
       }
@@ -114,12 +88,31 @@ export default function EscalationPage() {
     fetchStewardInfo();
   }, [grievanceId]);
 
+  const handleExportPDF = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      // @ts-expect-error: TS7016 - html2pdf.js lacks proper types due to ESM exports structure
+      import('html2pdf.js').then((html2pdf) => {
+        const element = document.getElementById("step2-memo");
+        const fileName = `${grievanceId}_Step2_${new Date().toISOString().slice(0, 10)}.pdf`;
+        html2pdf.default()
+          .from(element)
+          .set({
+            margin: 0.5,
+            filename: fileName,
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+          })
+          .save();
+      });
+    }
+  }, [grievanceId]);
+
   useEffect(() => {
     if (step2Memo && autoExportEnabled) {
       handleExportPDF();
       setAutoExportEnabled(false);
     }
-  }, [step2Memo]);
+  }, [step2Memo, autoExportEnabled, handleExportPDF]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -144,122 +137,13 @@ export default function EscalationPage() {
       } else {
         setError("No Step 2 memo returned.");
       }
-    } catch (err) {
+    } catch {
       setError("Error generating Step 2 memo.");
     } finally {
       setLoading(false);
     }
   }
 
-  const handleExportPDF = () => {
-    const element = document.getElementById("step2-memo");
-    const fileName = `${grievanceId}_Step2_${new Date().toISOString().slice(0, 10)}.pdf`;
-    html2pdf()
-      .from(element)
-      .set({
-        margin: 0.5,
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      })
-      .save();
-  };
-
-  async function handleSaveToSupabase() {
-    setSaveStatus("Saving...");
-    try {
-      const { data, error } = await supabase
-        .from('grievances')
-        .update({
-          step2_memo: step2Memo,
-          step2_escalated_at: new Date().toISOString()
-        })
-        .eq('id', grievanceId);
-      if (error) {
-        setSaveStatus("❌ Error saving: " + error.message);
-        console.error("❌ Failed to save Step 2 memo:", error);
-      } else {
-        setSaveStatus("✅ Saved to Supabase");
-        console.log("✅ Step 2 memo saved to Supabase");
-
-        // After successful Step 2 memo generation and save, trigger escalation email notification
-        // Fetch steward email from Supabase users table using created_by_user_id on the grievance
-        let stewardEmail = '';
-        if (grievanceId) {
-          const { data: grievance } = await supabase
-            .from('grievances')
-            .select('created_by_user_id')
-            .eq('id', grievanceId)
-            .single();
-          if (grievance?.created_by_user_id) {
-            const { data: user } = await supabase
-              .from('users')
-              .select('email')
-              .eq('id', grievance.created_by_user_id)
-              .single();
-            stewardEmail = user?.email;
-          }
-        }
-        if (stewardEmail && step2Memo) {
-          await fetch('/api/notify/escalation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              grievanceId,
-              step2Memo,
-              stewardEmail
-            })
-          });
-        }
-      }
-    } catch (e) {
-      setSaveStatus("❌ Error saving");
-      console.error("❌ Exception saving Step 2 memo:", e);
-    }
-  }
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Upload file to Supabase Storage
-    try {
-      await supabase.storage
-        .from('denials')
-        .upload(`denials/${grievanceId}/${file.name}`, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
-      setUploadStatus('success');
-      setUploadMessage('File uploaded successfully.');
-    } catch (err) {
-      console.error('❌ Error uploading denial file to Supabase Storage:', err);
-      setUploadStatus('error');
-      setUploadMessage('Error uploading file. Please try again.');
-    }
-
-    if (file.type === 'application/pdf') {
-      const text = await extractPdfText(file);
-      setUploadedText(text);
-      setStep1Denial(text);
-      setEditableDenialText(text);
-    } else if (file.type.includes('image')) {
-      const text = await extractTextWithTesseract(file);
-      setUploadedText(text);
-      setStep1Denial(text);
-      setEditableDenialText(text);
-    } else if (file.name.endsWith('.docx')) {
-      const text = await extractDocxText(file);
-      setUploadedText(text);
-      setStep1Denial(text);
-      setEditableDenialText(text);
-    } else {
-      alert("Unsupported file type.");
-    }
-  };
-
-  // Add the new handler for multiple files
   const handleMultiFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
@@ -287,11 +171,11 @@ export default function EscalationPage() {
       // Extract text from each file
       let text = '';
       if (file.type === 'application/pdf') {
-        text = await extractPdfText(file);
+        text = await extractPdfText();
       } else if (file.type.includes('image')) {
-        text = await extractTextWithTesseract(file);
+        text = await extractTextWithTesseract();
       } else if (file.name.endsWith('.docx')) {
-        text = await extractDocxText(file);
+        text = await extractDocxText();
       } else {
         text = `[${file.name}] Unsupported file type.`;
       }
@@ -454,7 +338,7 @@ export default function EscalationPage() {
         <div className="mt-4">
           <div className="font-semibold text-gray-700 mb-1">📂 Uploaded Files for this Grievance:</div>
           <ul className="list-disc ml-6 text-sm">
-            {fileList.map((name) => (
+            {fileList.map((name: string) => (
               <li key={name}>
                 <a
                   href={supabase.storage.from('denials').getPublicUrl(`denials/${grievanceId}/${name}`).data.publicUrl}

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { supabase } from '@/lib/supabaseClient';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -16,16 +17,29 @@ export async function POST(request: Request) {
     const systemPrompt =
       'You are a USPS APWU contract advisor. Help stewards resolve grievances.';
 
-    const chatMessages = [
+    const chatMessages: (ChatCompletionMessageParam | { role: string; content: string; name?: string })[] = [
       { role: 'system', content: systemPrompt },
-      ...messages.map((m: any) => ({ role: m.role, content: m.content })),
+      ...messages,
     ];
+    const safeMessages = chatMessages.map((msg) => {
+      if (msg.role === 'function') {
+        return {
+          role: 'function',
+          name: 'name' in msg && msg.name ? msg.name : 'unnamed_function',
+          content: msg.content,
+        };
+      }
+      return {
+        role: msg.role,
+        content: msg.content,
+      };
+    }) as ChatCompletionMessageParam[];
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       temperature: 0.3,
       max_tokens: 800,
-      messages: chatMessages,
+      messages: safeMessages,
     });
     console.log("GPT Completion:", JSON.stringify(completion, null, 2));
     const reply = completion.choices?.[0]?.message?.content?.trim();
@@ -44,7 +58,7 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ response: reply });
 
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }

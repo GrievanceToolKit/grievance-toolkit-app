@@ -47,7 +47,7 @@ export default function WitnessFormPage() {
       const data = await res.json();
       if (res.ok) setEmailStatus('Email sent successfully!');
       else setEmailStatus(data.error || 'Failed to send email');
-    } catch (e) {
+    } catch {
       setEmailStatus('Failed to send email');
     } finally {
       setLoading(false);

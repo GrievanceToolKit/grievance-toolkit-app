@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   let body;
   try {
     body = await request.json();
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
   const { grievanceId, stewardEmail, step2Memo } = body;
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       text: emailContent
     });
     return NextResponse.json({ success: true, data: response });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to send escalation email.' }, { status: 500 });
   }
 }

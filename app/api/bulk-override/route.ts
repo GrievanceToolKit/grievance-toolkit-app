@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 
+type GrievanceLog = {
+  id: string;
+  original_query: string;
+  original_response: string;
+};
+type Correction = {
+  original_response: string;
+  original_query: string;
+  steward_correction: string;
+  steward_email: string;
+  id: string;
+};
+
 // POST body: { correctionId: string }
 export async function POST(request: Request) {
   try {
@@ -12,7 +25,7 @@ export async function POST(request: Request) {
       .from('ai_training_queue')
       .select('*')
       .eq('id', correctionId)
-      .single();
+      .single<Correction>();
     if (fetchError || !correction) {
       return NextResponse.json({ error: 'Correction not found' }, { status: 404 });
     }
@@ -34,15 +47,13 @@ export async function POST(request: Request) {
     }
 
     // Filter out logs already corrected
-    const logIds = logs.map(l => l.id);
+    const logIds = (logs as GrievanceLog[]).map(l => l.id);
     const { data: alreadyCorrected } = await supabase
       .from('ai_training_queue')
       .select('source_log_id')
       .in('source_log_id', logIds);
-    const alreadyCorrectedIds = new Set((alreadyCorrected || []).map(r => r.source_log_id));
-    const toApply = logs.filter(l => !alreadyCorrectedIds.has(l.id));
-
-    // 3. Insert duplicate rows into ai_training_queue
+    const alreadyCorrectedIds = new Set((alreadyCorrected || []).map((r: { source_log_id: string }) => r.source_log_id));
+    const toApply = (logs as GrievanceLog[]).filter(l => !alreadyCorrectedIds.has(l.id));
     const inserts = toApply.map(l => ({
       original_query: l.original_query,
       original_response: l.original_response,
@@ -62,7 +73,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Bulk insert failed' }, { status: 500 });
     }
     return NextResponse.json({ message: 'Bulk override applied', applied: inserts.length });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }

@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Bar } from 'react-chartjs-2';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 // --- Types ---

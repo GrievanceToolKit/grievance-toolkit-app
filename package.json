@@ -19,7 +19,7 @@
     "@sendgrid/mail": "^8.1.5",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.49.10",
+    "@supabase/supabase-js": "^2.50.0",
     "chart.js": "^4.4.9",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^2.30.0",

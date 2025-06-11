@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, JSX } from "react";
 import { useRouter } from 'next/navigation';
-import { ArrowUpRightIcon, DocumentTextIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon, PlusIcon, DocumentIcon, ArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { ArrowUpRightIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import { Popover, Transition } from '@headlessui/react';
 import { useUser } from '@clerk/nextjs';
 
 // Dummy data
-const dummyStats = [
-  { label: 'Total Grievances Filed', value: 42, icon: <DocumentTextIcon className="h-7 w-7 text-blue-500" /> },
+const dummyStats: Array<{ label: string; value: number | string; icon: JSX.Element }> = [
+  { label: 'Total Grievances Filed', value: 42, icon: <UserGroupIcon className="h-7 w-7 text-blue-500" /> },
   { label: 'Grievances in Progress', value: 8, icon: <ArrowUpRightIcon className="h-7 w-7 text-yellow-500" /> },
   { label: 'Resolved Cases', value: 27, icon: <CheckCircleIcon className="h-7 w-7 text-green-500" /> },
   { label: 'PDFs Generated', value: 19, icon: <UserGroupIcon className="h-7 w-7 text-purple-500" /> },
   { label: 'AI Match Accuracy', value: '92%', icon: <SparklesIcon className="h-7 w-7 text-pink-500" /> },
 ];
 
-const recentGrievances = [
+const recentGrievances: Array<{ id: string; title: string; article: string; date: string; confidence: 'High' | 'Medium' | 'Low' }> = [
   { id: 'GTK-2025-1006', title: '204-B assignment without pay', article: 'ELM 437.11', date: '2025-05-01', confidence: 'High' },
   { id: 'GTK-2025-1005', title: 'OTDL rights not respected', article: 'Article 19', date: '2025-04-11', confidence: 'Medium' },
   { id: 'GTK-2025-1004', title: 'Union not notified of staffing', article: 'Article 17', date: '2025-03-22', confidence: 'High' },
@@ -30,7 +30,7 @@ const funnelCounts = {
   arbitration: 1,
 };
 
-const aiInsights = [
+const aiInsights: Array<{ type: string; article: string; confidence: string; override: boolean }> = [
   { type: 'OTDL Violation', article: 'Article 19', confidence: '91%', override: false },
   { type: '204-B Pay', article: 'ELM 437.11', confidence: '88%', override: true },
   { type: 'Hostile Threats', article: 'Article 15', confidence: '77%', override: false },
@@ -38,9 +38,11 @@ const aiInsights = [
   { type: 'TACS Manipulation', article: 'Article 5', confidence: '85%', override: true },
 ];
 
-const userRoles = ['admin', 'steward', 'member'];
+const userRoles = ['admin', 'steward', 'member'] as const;
 
-export function RequireRole({ role, children }: { role: string, children: React.ReactNode }) {
+type UserRole = typeof userRoles[number];
+
+export function RequireRole({ role, children }: { role: UserRole; children: React.ReactNode }) {
   const { user, isLoaded } = useUser();
   if (!isLoaded) return null;
   if (!user || user.publicMetadata.role !== role) {
@@ -50,20 +52,16 @@ export function RequireRole({ role, children }: { role: string, children: React.
 }
 
 export default function Dashboard() {
-  const [role, setRole] = useState<'admin' | 'steward' | 'member'>('admin');
+  const [role, setRole] = useState<UserRole>('admin');
   const router = useRouter();
   const [lastUpdated, setLastUpdated] = useState("");
-  // AI Insights sorting state
   const [sortCol, setSortCol] = useState<'type' | 'article' | 'confidence' | 'override' | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
-    // Set timestamp only on client
-    const now = new Date().toLocaleString();
-    setLastUpdated(now);
+    setLastUpdated(new Date().toLocaleString());
   }, []);
 
-  // Filter logic for role
   const visibleGrievances = role === 'admin' ? recentGrievances : role === 'steward' ? recentGrievances.slice(0, 3) : recentGrievances.slice(0, 1);
   const visibleAI = role === 'admin' ? aiInsights : aiInsights.slice(0, 2);
   const usage = { tier: role === 'admin' ? 'Pro' : 'Free', used: 3, max: 5 };

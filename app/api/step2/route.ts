@@ -45,11 +45,18 @@ const getTopMatchFromSupabase = async (articleTitle: string): Promise<string | n
   return data?.[0]?.content || null;
 };
 
+// Define a type for union contentions
+interface UnionContention {
+  article: string;
+  whatItConveys: string;
+  unionPosition: string;
+}
+
 export async function POST(request: Request) {
   let body;
   try {
     body = await request.json();
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
   const { grievanceId, originalMemo, step1Denial, violations = [] } = body;
@@ -58,7 +65,7 @@ export async function POST(request: Request) {
   }
 
   // RAG: Build unionContentions with contract language for each violation
-  const unionContentions: any[] = [];
+  const unionContentions: UnionContention[] = [];
   if (Array.isArray(violations) && violations.length > 0) {
     for (const v of violations) {
       const article = v.article_number;

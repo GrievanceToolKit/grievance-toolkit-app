@@ -56,7 +56,7 @@ export default function RoleSelect() {
 
 			setSuccess('Role updated! Redirecting...');
 			setTimeout(() => router.push('/dashboard'), 1000);
-		} catch (e: any) {
+		} catch (e: unknown) {
 			console.error("❌ Failed to update role:", e);
 			setError('Failed to update role.');
 		} finally {

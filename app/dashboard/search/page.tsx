@@ -2,9 +2,15 @@
 
 import React, { useState } from 'react';
 
+interface Result {
+  rewritten_summary: string;
+  violations: { article: string; description: string }[];
+  // ...add other properties as needed...
+}
+
 export default function GrievanceSearchPage() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -22,9 +28,9 @@ export default function GrievanceSearchPage() {
       if (!res.ok) throw new Error(data.error || 'Search failed');
 
       setResults(data.results || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Search error:', err);
-      setError(err.message || 'Unexpected error');
+      setError((err as Error).message || 'Unexpected error');
     } finally {
       setLoading(false);
     }
@@ -59,9 +65,9 @@ export default function GrievanceSearchPage() {
             <div key={idx} className="bg-white border rounded p-4 mb-4 shadow">
               <p className="font-medium mb-1 text-blue-900">{result.rewritten_summary}</p>
               <ul className="list-disc ml-6 text-sm text-gray-800">
-                {result.violations.map((v: any, i: number) => (
+                {result.violations.map((v, i) => (
                   <li key={i}>
-                    <strong>{v.article_number}:</strong> {v.article_title} — {v.violation_reason}
+                    <strong>{v.article}:</strong> {v.description}
                   </li>
                 ))}
               </ul>

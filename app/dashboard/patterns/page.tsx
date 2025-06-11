@@ -38,7 +38,6 @@ function getCombinations(arr: string[]): string[][] {
 }
 
 export default function PatternsPage() {
-  const [rows, setRows] = useState<TrainingExample[]>([]);
   const [loading, setLoading] = useState(true);
   const [articleCounts, setArticleCounts] = useState<Record<string, number>>({});
   const [comboCounts, setComboCounts] = useState<Record<string, number>>({});
@@ -53,17 +52,18 @@ export default function PatternsPage() {
         .select('id,steward_correction,created_at')
         .not('steward_correction', 'is', null);
       if (!data || error) {
-        setRows([]);
         setLoading(false);
         return;
       }
-      setRows(data);
-      // --- Mining ---
+      // Article counts
       const aCounts: Record<string, number> = {};
+      // Article combos
       const cCounts: Record<string, number> = {};
+      // Keyword counts
       const kCounts: Record<string, number> = {};
+      // Keyword to article links
       const k2a: Record<string, Record<string, number>> = {};
-      data.forEach(row => {
+      data.forEach((row: TrainingExample) => {
         const articles = extractArticles(row.steward_correction);
         const keywords = extractKeywords(row.steward_correction);
         // Article counts

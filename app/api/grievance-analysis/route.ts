@@ -1,10 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import OpenAI from "openai";
 import { NextResponse, NextRequest } from "next/server";
-import { Buffer } from "buffer";
-import * as Tesseract from "tesseract.js";
 import { extractTextFromFile } from "@/lib/extractTextFromFile";
-import { auth as clerkAuth, getAuth } from "@clerk/nextjs/server";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -27,28 +24,18 @@ Format clearly, use bold section headers, no disclaimers. Language must be profe
 
 // Helper to extract Clerk and Supabase user IDs from the request
 async function extractUserIdsFromRequest(request: NextRequest) {
-  let clerkUserId: string | null = null;
+  const clerkUserId: string | null = null;
   let supabaseUserId: string | null = null;
-  try {
-    const authData = getAuth(request);
-    clerkUserId = authData.userId || null;
-    if (authData.sessionClaims && typeof authData.sessionClaims.sub === "string") {
-      const sub = authData.sessionClaims.sub;
-      if (/^[0-9a-fA-F-]{36}$/.test(sub)) {
-        supabaseUserId = sub;
+  // Only fallback JWT logic, since getAuth is not available
+  const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const jwt = authHeader.replace("Bearer ", "");
+    try {
+      const { data: { user } } = await supabase.auth.getUser(jwt);
+      if (user && user.id) {
+        supabaseUserId = user.id;
       }
-    }
-  } catch (err) {
-    const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const jwt = authHeader.replace("Bearer ", "");
-      try {
-        const { data: { user } } = await supabase.auth.getUser(jwt);
-        if (user && user.id) {
-          supabaseUserId = user.id;
-        }
-      } catch {}
-    }
+    } catch {}
   }
   return { clerkUserId, supabaseUserId };
 }
@@ -132,8 +119,8 @@ Return JSON only:
 
     const parsed = JSON.parse(jsonResponse.choices[0].message.content || "{}");
     violations = parsed.violations || [];
-  } catch (err) {
-    console.error("❌ Failed to parse violations JSON:", err);
+  } catch {
+    console.error("❌ Failed to parse violations JSON:");
   }
 
   // Insert grievance as usual

@@ -1,5 +1,4 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import QRCode from 'qrcode';
+import { PDFDocument, rgb, StandardFonts, PDFPage, PDFFont, RGB } from 'pdf-lib';
 
 export interface GrievancePDFInput {
   title: string;
@@ -17,20 +16,13 @@ export interface GrievancePDFInput {
   date: string; // ISO string
 }
 
-function drawSectionHeader(
-  page: any,
-  text: string,
-  x: number,
-  y: number,
-  font: any,
-  color: any,
-  fontSize = 14
-) {
-  page.drawText(text, { x, y, size: fontSize, font, color });
-  page.drawLine({ start: { x, y: y - 2 }, end: { x: x + 400, y: y - 2 }, thickness: 1, color: rgb(0.8, 0.8, 0.8) });
+function drawSectionHeader(page: PDFPage, text: string, y: number, font: PDFFont, color: RGB) {
+  page.drawText(text, { x: 48, y, size: 14, font, color });
+  page.drawLine({ start: { x: 48, y: y - 2 }, end: { x: 48 + 400, y: y - 2 }, thickness: 1, color: rgb(0.8, 0.8, 0.8) });
 }
 
-function parseMarkdownToLines(text: string, font: any, fontSize: number, maxWidth: number) {
+// Removed unused 'font' and 'fontSize' parameters from parseMarkdownToLines
+function parseMarkdownToLines(text: string): { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] {
   // Simple markdown: #, ##, **bold**, `code`, > quote
   const lines: { text: string; style?: 'header'|'bold'|'quote'|'code'|'normal' }[] = [];
   text.split(/\r?\n/).forEach(line => {
@@ -72,21 +64,21 @@ export async function generateGrievancePDF(input: GrievancePDFInput): Promise<Bu
   y -= 10;
 
   // SECTION: Grievance Summary
-  drawSectionHeader(page, 'Grievance Summary', margin, y, fontBold, rgb(0,0,0));
+  drawSectionHeader(page, 'Grievance Summary', y, fontBold, rgb(0,0,0));
   y -= lineHeight;
   page.drawText(input.summary, { x: margin + 10, y, size: 12, font, color: rgb(0.1,0.1,0.1) });
   y -= lineHeight + 4;
 
   // SECTION: Detailed Description
-  drawSectionHeader(page, 'Detailed Description', margin, y, fontBold, rgb(0,0,0));
+  drawSectionHeader(page, 'Detailed Description', y, fontBold, rgb(0,0,0));
   y -= lineHeight;
   page.drawText(input.description, { x: margin + 10, y, size: 12, font, color: rgb(0.1,0.1,0.1) });
   y -= lineHeight + 4;
 
   // SECTION: Full Memo Content
-  drawSectionHeader(page, 'Full Memo Content', margin, y, fontBold, rgb(0,0,0));
+  drawSectionHeader(page, 'Full Memo Content', y, fontBold, rgb(0,0,0));
   y -= lineHeight;
-  const memoLines = parseMarkdownToLines(input.content || '', font, 12, maxWidth);
+  const memoLines = parseMarkdownToLines(input.content || '');
   memoLines.forEach(({ text, style }) => {
     let drawFont = font, drawColor = rgb(0.1,0.1,0.1), drawSize = 12, box = false;
     if (style === 'header') { drawFont = fontBold; drawSize = 13; }
@@ -103,7 +95,7 @@ export async function generateGrievancePDF(input: GrievancePDFInput): Promise<Bu
 
   // SECTION: Contract Violations
   if (input.violations && input.violations.length > 0) {
-    drawSectionHeader(page, 'Contract Violations', margin, y, fontBold, rgb(0,0,0));
+    drawSectionHeader(page, 'Contract Violations', y, fontBold, rgb(0,0,0));
     y -= lineHeight;
     // Table header
     page.drawRectangle({ x: margin + 8, y: y + 2, width: maxWidth - 16, height: lineHeight, color: rgb(0.93,0.93,0.97) });
@@ -121,7 +113,7 @@ export async function generateGrievancePDF(input: GrievancePDFInput): Promise<Bu
   }
 
   // SECTION: Case Metadata
-  drawSectionHeader(page, 'Case Metadata', margin, y, fontBold, rgb(0,0,0));
+  drawSectionHeader(page, 'Case Metadata', y, fontBold, rgb(0,0,0));
   y -= lineHeight;
   page.drawText(`Case Number: ${input.case_number || ''}`, { x: margin + 10, y, size: 12, font });
   page.drawText(`Step: ${input.step_label || input.step}`, { x: margin + 200, y, size: 12, font });
@@ -130,7 +122,7 @@ export async function generateGrievancePDF(input: GrievancePDFInput): Promise<Bu
 
   // STEP 3 SPECIAL: Final Union Recommendation
   if (input.step === 'step3') {
-    drawSectionHeader(page, 'Final Union Recommendation', margin, y, fontBold, rgb(0,0,0));
+    drawSectionHeader(page, 'Final Union Recommendation', y, fontBold, rgb(0,0,0));
     y -= lineHeight;
     page.drawText('This case is recommended for arbitration. Forwarded to MBA for review.', { x: margin + 10, y, size: 12, font });
     y -= lineHeight + 4;

@@ -54,13 +54,13 @@ export default function LogsPage() {
     return matchesSearch && matchesFlagged;
   });
 
-  const handleFeedbackChange = (id: string, field: keyof (typeof logFeedback)[string], value: any) => {
+  const handleFeedbackChange = (id: string, field: keyof (typeof logFeedback)[string], value: unknown) => {
     setLogFeedback((prev) => ({
       ...prev,
       [id]: {
-        flagged: field === 'flagged' ? value : prev[id]?.flagged || false,
-        correctedResponse: field === 'correctedResponse' ? value : prev[id]?.correctedResponse || '',
-        trainingExample: field === 'trainingExample' ? value : prev[id]?.trainingExample || false,
+        flagged: field === 'flagged' ? value as boolean : prev[id]?.flagged || false,
+        correctedResponse: field === 'correctedResponse' ? value as string : prev[id]?.correctedResponse || '',
+        trainingExample: field === 'trainingExample' ? value as boolean : prev[id]?.trainingExample || false,
       },
     }));
   };

@@ -7,7 +7,6 @@ import { Document } from '@langchain/core/documents';
 
 dotenv.config();
 
-const DATA_PATH = path.resolve(process.cwd(), 'data/fine_tune_grievances.jsonl');
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 export type GrievanceExample = {

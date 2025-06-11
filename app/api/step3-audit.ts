@@ -8,6 +8,8 @@ import { generateGrievancePDF } from '@/lib/pdf/generator';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+type Violation = { article_number: string; article_title: string; violation_reason: string };
+
 export async function POST(request: Request) {
   try {
     const { grievanceId, mbaEmail } = await request.json();
@@ -41,7 +43,7 @@ export async function POST(request: Request) {
     if (files && files.length) {
       for (const file of files) {
         // Download file from Supabase Storage
-        const { data: fileBlob, error: downloadError } = await supabase.storage
+        const { data: fileBlob } = await supabase.storage
           .from('denials')
           .download(file.storage_path || file.file_name);
         if (fileBlob) {
@@ -56,7 +58,7 @@ export async function POST(request: Request) {
 
     // Run OpenAI
     let auditMemo = '';
-    let violations: any[] = [];
+    let violations: Violation[] = [];
     try {
       const aiRes = await openai.chat.completions.create({
         model: 'gpt-4',
@@ -69,7 +71,7 @@ export async function POST(request: Request) {
       auditMemo = aiRes.choices[0]?.message?.content || '';
       // Optionally extract violations (simple regex or section parse)
       violations = [];
-    } catch (err) {
+    } catch {
       return NextResponse.json({ error: 'AI failed to generate audit memo' }, { status: 500 });
     }
 
@@ -158,7 +160,7 @@ export async function POST(request: Request) {
     }).eq('id', grievanceId);
 
     return NextResponse.json({ auditMemo, violations, forwardedToMBA });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
   }
 }

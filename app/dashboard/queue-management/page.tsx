@@ -24,7 +24,7 @@ export default function QueueManagementPage() {
   useEffect(() => {
     async function fetchCorrections() {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('ai_training_queue')
         .select('*')
         .eq('applied_to_model', false)

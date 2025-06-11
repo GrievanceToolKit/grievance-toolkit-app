@@ -30,7 +30,7 @@ export default function AIAnalysisPage() {
       } else {
         toast.error(data.error || 'AI analysis failed');
       }
-    } catch (e) {
+    } catch {
       toast.error('AI analysis failed');
     } finally {
       setAiLoading(false);

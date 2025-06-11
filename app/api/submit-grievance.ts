@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   if (authHeader && authHeader.startsWith("Bearer ")) {
     const jwt = authHeader.replace("Bearer ", "");
     // Use Supabase client to get user from JWT
-    const { data: { user }, error } = await supabase.auth.getUser(jwt);
+    const { data: { user } } = await supabase.auth.getUser(jwt);
     if (user && user.id) {
       supabaseUserId = user.id;
     }

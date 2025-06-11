@@ -5,12 +5,6 @@ import { registerChartModules } from '../components/chartUtils';
 
 registerChartModules(); // Call before rendering <Bar />
 
-const mockUsers = [
-  { name: 'Ricardo Parra', role: 'Admin', email: 'ricardo@example.com', status: 'Active' },
-  { name: 'Jose Santiago', role: 'Steward', email: 'jose@example.com', status: 'Active' },
-  { name: 'Maria Lopez', role: 'Member', email: 'maria@example.com', status: 'Disabled' },
-];
-
 export default function ReportsPage() {
   const [selectedRange, setSelectedRange] = useState('Last 30 Days');
 

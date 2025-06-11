@@ -36,7 +36,7 @@ export default function StewardAssistantPage() {
 			const data = await res.json();
 			if (!data.reply) throw new Error('No response from assistant');
 			setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
-		} catch (e) {
+		} catch {
 			setError('Failed to get response. Please try again.');
 		} finally {
 			setLoading(false);

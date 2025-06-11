@@ -1,20 +1,37 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useUser } from '@clerk/nextjs';
-// @ts-ignore
+// @ts-expect-error: html2pdf.js has no types, see types/html2pdf.d.ts
 import html2pdf from "html2pdf.js";
 import { toast } from 'react-hot-toast';
 
+interface Grievance {
+  id: string;
+  case_number?: string;
+  title?: string;
+  step1_created_at?: string;
+  step2_escalated_at?: string;
+  step1_memo?: string;
+  step1_denial?: string;
+  step2_memo?: string;
+  grievance_notes?: string;
+  memo_feedback?: string;
+  updated_by_user_id?: string;
+  updated_at?: string;
+  created_by_user_id?: string;
+  local_id?: string;
+  status?: string;
+}
+
 export default function GrievanceDetailPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const { user } = useUser();
-  const [grievance, setGrievance] = useState<any>(null);
+  const { id } = useParams();
+  const [grievance, setGrievance] = useState<Grievance | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<{ name: string }[]>([]);
   const [reanalyzing, setReanalyzing] = useState(false);
   const [notes, setNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
@@ -27,8 +44,7 @@ export default function GrievanceDetailPage() {
   const [step3Loading, setStep3Loading] = useState(false);
 
   // Use params for dynamic route [id].tsx
-  const params = useParams();
-  const grievanceId = params?.id || "";
+  const grievanceId = id || "";
 
   useEffect(() => {
     async function fetchGrievance() {
@@ -90,9 +106,9 @@ export default function GrievanceDetailPage() {
       });
       const data = await res.json();
       if (data.step2Memo) {
-        setGrievance((prev: any) => ({ ...prev, step2_memo: data.step2Memo }));
+        setGrievance((prev) => ({ ...prev!, step2_memo: data.step2Memo }));
       }
-    } catch (err) {
+    } catch {
       alert("AI re-analysis failed.");
     } finally {
       setReanalyzing(false);
@@ -216,7 +232,7 @@ export default function GrievanceDetailPage() {
       </div>
       {/* Timeline Sidebar */}
       <ul className="border-l-2 pl-4 mt-4 space-y-1 text-sm text-gray-700">
-        <li>📌 Step 1 Filed: {formatDate(grievance.step1_created_at)}</li>
+        <li>📌 Step 1 Filed: {formatDate(grievance.step1_created_at || "")}</li>
         {grievance.step2_escalated_at && <li>🚀 Step 2 Escalated: {formatDate(grievance.step2_escalated_at)}</li>}
         {!grievance.step2_memo && <li>⏳ Awaiting AI Memo</li>}
       </ul>
@@ -301,8 +317,8 @@ export default function GrievanceDetailPage() {
               } else {
                 setStep3Status(data.error || '❌ Failed to generate audit.');
               }
-            } catch (err) {
-              setStep3Status('❌ Error sending to MBA');
+            } catch {
+              setStep3Status('❌ Failed to generate audit.');
             } finally {
               setStep3Loading(false);
             }
@@ -313,7 +329,7 @@ export default function GrievanceDetailPage() {
         {step3Status && <div className="mt-2 text-sm">{step3Status}</div>}
       </div>
       <p className="text-sm text-gray-500 mt-4">
-        Last updated by: {updatedByName || grievance.updated_by_user_id || "Unknown"} on {formatDate(grievance.updated_at)}
+        Last updated by: {updatedByName || grievance.updated_by_user_id || "Unknown"} on {formatDate(grievance.updated_at || "")}
       </p>
     </div>
   );
