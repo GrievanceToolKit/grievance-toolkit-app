@@ -1,8 +1,6 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 const analyzePrompt = (input: string) => `
 You are a union grievance analyst trained in the APWU contract. 
 Your job is to read the following steward question and return a JSON object with the following fields:
@@ -30,6 +28,11 @@ Grievance Input:
 `;
 
 export async function POST(req: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error("❌ OPENAI_API_KEY is missing. AI Assistant will not function.");
+    return NextResponse.json({ error: "Missing API Key" }, { status: 500 });
+  }
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const body = await req.json();
     const userInput = body.prompt || body.input || '';
