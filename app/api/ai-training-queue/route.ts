@@ -1,5 +1,18 @@
+import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+
+const supabaseUrl = process.env['SUPABASE_URL'] ?? '';
+const supabaseKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error("❌ Supabase env variables not found at build time", {
+    SUPABASE_URL: supabaseUrl,
+    SUPABASE_SERVICE_ROLE_KEY: !!supabaseKey
+  });
+  throw new Error("Supabase client cannot be initialized. Missing env variables.");
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(request: Request) {
   try {

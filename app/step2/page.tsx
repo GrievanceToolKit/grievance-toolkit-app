@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 // Extraction helpers (to be replaced with real implementations or API calls)
 async function extractPdfText(): Promise<string> {
@@ -17,11 +18,6 @@ async function extractDocxText(): Promise<string> {
   // TODO: Implement DOCX extraction (e.g., with mammoth.js)
   return "[DOCX text extraction not yet implemented]";
 }
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!
-);
 
 export default function EscalationPage() {
   const [grievanceId, setGrievanceId] = useState("");
@@ -40,12 +36,17 @@ export default function EscalationPage() {
   const [editMode, setEditMode] = useState(false);
   const [autoExportEnabled, setAutoExportEnabled] = useState(true);
   const [stewardInfo, setStewardInfo] = useState<{ name: string; local_name: string } | null>(null);
+  const [publicUrls, setPublicUrls] = useState<Record<string, string>>({});
 
   const manualTextFallback = step1Denial;
   const step1DenialText = editableDenialText || manualTextFallback;
 
   useEffect(() => {
     async function fetchFiles() {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_KEY!
+      );
       if (!grievanceId) {
         setFileList([]);
         return;
@@ -70,6 +71,10 @@ export default function EscalationPage() {
 
     // Fetch steward info for signature block
     async function fetchStewardInfo() {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_KEY!
+      );
       if (!grievanceId) return;
       const { data: grievance } = await supabase
         .from('grievances')
@@ -87,6 +92,18 @@ export default function EscalationPage() {
     }
     fetchStewardInfo();
   }, [grievanceId]);
+
+  useEffect(() => {
+    if (fileList.length > 0 && grievanceId) {
+      const supabase = createClientComponentClient();
+      const urls: Record<string, string> = {};
+      fileList.forEach((name: string) => {
+        const { data } = supabase.storage.from('denials').getPublicUrl(`denials/${grievanceId}/${name}`);
+        urls[name] = data.publicUrl;
+      });
+      setPublicUrls(urls);
+    }
+  }, [fileList, grievanceId]);
 
   const handleExportPDF = useCallback(() => {
     if (typeof window !== 'undefined') {
@@ -145,6 +162,10 @@ export default function EscalationPage() {
   }
 
   const handleMultiFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_KEY!
+    );
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
@@ -341,7 +362,7 @@ export default function EscalationPage() {
             {fileList.map((name: string) => (
               <li key={name}>
                 <a
-                  href={supabase.storage.from('denials').getPublicUrl(`denials/${grievanceId}/${name}`).data.publicUrl}
+                  href={publicUrls[name]}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-700 underline hover:text-blue-900"

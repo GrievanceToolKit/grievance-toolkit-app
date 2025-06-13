@@ -2,10 +2,15 @@ import { auth } from '@clerk/nextjs/server';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!
-);
+const supabaseUrl = process.env['SUPABASE_URL'] ?? '';
+const supabaseKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error("❌ Missing Supabase env variables", { supabaseUrl, supabaseKey });
+  throw new Error("Supabase client cannot be initialized. Missing env vars.");
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(request: Request) {
   const { userId } = await auth();

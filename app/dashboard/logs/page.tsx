@@ -8,12 +8,6 @@ import { Button } from "@/components/ui/button"; // Import the Button component
 // import { Input } from "@/components/ui/input";
 // import { Card, CardContent } from "@/components/ui/card";
 
-// Replace with your Supabase credentials (public env vars for client-side)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!
-);
-
 interface SearchLog {
   id: string;
   query: string;
@@ -37,6 +31,10 @@ export default function LogsPage() {
   }, []);
 
   const fetchLogs = async () => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_KEY!
+    );
     const { data, error } = await supabase
       .from("grievance_search_logs")
       .select("*")
@@ -66,6 +64,10 @@ export default function LogsPage() {
   };
 
   const saveFeedbackToSupabase = async (logId: string) => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_KEY!
+    );
     const feedback = logFeedback[logId];
     if (!feedback) return;
     setSaving((prev) => ({ ...prev, [logId]: true }));

@@ -5,11 +5,6 @@ import { createClient } from "@supabase/supabase-js";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!
-);
-
 interface TrainingQueueRow {
   id: string;
   original_query: string;
@@ -31,6 +26,10 @@ export default function TrainingExportPage() {
   }, []);
 
   const fetchRows = async () => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_KEY!
+    );
     setLoading(true);
     const { data, error } = await supabase
       .from("ai_training_queue")

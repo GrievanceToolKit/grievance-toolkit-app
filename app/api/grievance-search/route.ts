@@ -1,7 +1,17 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { searchGrievances } from '@/lib/rag/grievanceRAG';
-import { supabase } from '@/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import { getAuth } from '@clerk/nextjs/server';
+
+const supabaseUrl = process.env['SUPABASE_URL'] ?? '';
+const supabaseKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error("❌ Missing Supabase env variables", { supabaseUrl, supabaseKey });
+  throw new Error("Supabase client cannot be initialized. Missing env vars.");
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface SearchRequestBody {
   query: string;
