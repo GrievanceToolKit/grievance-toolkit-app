@@ -1,16 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env['SUPABASE_URL'] ?? '';
-const supabaseKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Missing Supabase env variables", { supabaseUrl, supabaseKey });
-  throw new Error("Supabase client cannot be initialized. Missing env vars.");
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 type GrievanceLog = {
   id: string;
   original_query: string;
@@ -26,6 +16,13 @@ type Correction = {
 
 // POST body: { correctionId: string }
 export async function POST(request: Request) {
+  const supabaseUrl = process.env['SUPABASE_URL'] ?? '';
+  const supabaseKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';
+  if (!supabaseUrl || !supabaseKey) {
+    console.error("❌ Missing Supabase env variables", { supabaseUrl, supabaseKey });
+    return NextResponse.json({ error: "Missing Supabase credentials" }, { status: 500 });
+  }
+  const supabase = createClient(supabaseUrl, supabaseKey);
   try {
     const { correctionId } = await request.json();
     if (!correctionId) return NextResponse.json({ error: 'Missing correctionId' }, { status: 400 });
