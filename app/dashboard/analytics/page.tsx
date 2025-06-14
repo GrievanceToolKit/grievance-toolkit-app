@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import { Bar } from 'react-chartjs-2';
 import { Button } from '@/components/ui/button';
 
@@ -41,6 +41,7 @@ export default function AnalyticsPage() {
     async function fetchData() {
       setLoading(true);
       setError(null);
+      const supabase = getSupabaseClient();
       let query = supabase
         .from('ai_training_queue')
         .select('*')

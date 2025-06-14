@@ -1,7 +1,7 @@
 "use client";
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import { toast } from 'react-hot-toast';
 import { cn } from '@/lib/utils';
 
@@ -28,6 +28,7 @@ export default function StewardInbox() {
   useEffect(() => {
     async function fetchInbox() {
       setLoading(true);
+      const supabase = getSupabaseClient();
       let query = supabase
         .from('union_links')
         .select('*')
@@ -55,6 +56,7 @@ export default function StewardInbox() {
 
   // Update: markSeen logs seen_at timestamp
   const markSeen = async (id: string) => {
+    const supabase = getSupabaseClient();
     await supabase.from('union_links')
       .update({ seen_at: new Date().toISOString() })
       .eq('id', id)
@@ -63,6 +65,7 @@ export default function StewardInbox() {
   };
 
   const archiveLink = async (id: string) => {
+    const supabase = getSupabaseClient();
     await supabase
       .from('union_links')
       .update({ archived_at: new Date().toISOString() })

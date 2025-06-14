@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 import { extractTextFromFile } from "@/lib/extractTextFromFile";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export async function POST(request: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('❌ OPENAI_API_KEY is missing.');
+    return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
+  }
+  let supabase;
+  try {
+    supabase = getSupabaseClient();
+  } catch {
+    console.error('❌ Supabase env vars are missing.');
+    return NextResponse.json({ error: 'Missing Supabase credentials' }, { status: 500 });
+  }
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const { grievanceId } = await request.json();
   if (!grievanceId) {
     return NextResponse.json({ error: "Missing grievanceId" }, { status: 400 });

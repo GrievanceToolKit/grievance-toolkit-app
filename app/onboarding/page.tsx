@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { supabase } from "@/lib/supabaseClient";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { extractDocxText } from "@/lib/docxExtract";
 import { chunkText } from "@/lib/chunkText";
 
@@ -27,6 +27,7 @@ export default function OnboardingPage() {
       return;
     }
     setStatus("Saving...");
+    const supabase = createClientComponentClient();
     const { error } = await supabase.from("users").upsert({
       id: user.id,
       name: formData.name,
@@ -74,6 +75,7 @@ export default function OnboardingPage() {
       setStatus("❌ Extraction failed");
       return;
     }
+    const supabase = createClientComponentClient();
     // Upload file to Supabase Storage
     const filePath = `lmou/${user.publicMetadata?.local_id || formData.localId}/${file.name}`;
     const { error: uploadError } = await supabase.storage.from("lmou").upload(filePath, file, { upsert: true });

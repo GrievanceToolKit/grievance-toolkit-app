@@ -1,8 +1,11 @@
-import { supabase } from '../supabaseClient';
+import { getSupabaseClient } from '../supabaseClient';
 import { OpenAI } from 'openai';
 
 // Helper to get OpenAI embedding for a string
 export async function getEmbedding(text: string): Promise<number[]> {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is missing');
+  }
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const response = await openai.embeddings.create({
     model: 'text-embedding-3-small',
@@ -14,7 +17,7 @@ export async function getEmbedding(text: string): Promise<number[]> {
 // Get the top matching contract clause from Supabase using pgvector
 export const getTopMatchFromSupabase = async (articleTitle: string) => {
   const embedding = await getEmbedding(articleTitle);
-
+  const supabase = getSupabaseClient();
   const { data, error } = await supabase.rpc('match_chunks', {
     query_embedding: embedding,
     match_count: 1

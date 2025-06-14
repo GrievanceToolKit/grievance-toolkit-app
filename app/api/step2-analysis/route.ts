@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@supabase/supabase-js";
 import { extractTextFromFile } from "@/lib/extractTextFromFile";
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
@@ -31,6 +31,14 @@ interface SessionClaims {
 }
 
 export async function POST(request: Request) {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Missing Supabase env vars");
+  }
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   // NOTE: Clerk v6+ server-side: auth() returns a promise, use await and session.user
   const sessionAuth = await auth();
   const claims = sessionAuth.sessionClaims as SessionClaims;

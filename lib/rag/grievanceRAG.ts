@@ -7,8 +7,6 @@ import { Document } from '@langchain/core/documents';
 
 dotenv.config();
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
 export type GrievanceExample = {
   rewritten_summary: string;
   violations: {
@@ -41,6 +39,9 @@ export function loadExamples() {
 }
 
 async function buildVectorStore() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is missing');
+  }
   loadedExamples = loadExamples();
   const docs: Document[] = loadedExamples.map((ex, idx) => {
     const text = [
@@ -50,7 +51,7 @@ async function buildVectorStore() {
     return new Document({ pageContent: text, metadata: { idx } });
   });
   const embeddings = new OpenAIEmbeddings({
-    openAIApiKey: OPENAI_API_KEY,
+    openAIApiKey: process.env.OPENAI_API_KEY,
     model: 'text-embedding-3-small',
   });
   vectorStore = await MemoryVectorStore.fromDocuments(docs, embeddings);

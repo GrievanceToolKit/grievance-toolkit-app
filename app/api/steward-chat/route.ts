@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export async function POST(request: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('❌ OPENAI_API_KEY is missing.');
+    return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
+  }
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  let supabase;
+  try {
+    supabase = getSupabaseClient();
+  } catch {
+    console.error('❌ Supabase env vars are missing.');
+    return NextResponse.json({ error: 'Missing Supabase credentials' }, { status: 500 });
+  }
   try {
     const body = await request.json();
     const { messages, role } = body;

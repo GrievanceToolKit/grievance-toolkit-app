@@ -1,7 +1,7 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 // @ts-expect-error: html2pdf.js has no types, see types/html2pdf.d.ts
 import html2pdf from "html2pdf.js";
 import Link from "next/link";
@@ -35,6 +35,7 @@ export default function HistoryViewer() {
     async function fetchGrievances() {
       if (!user) return;
       setLoading(true);
+      const supabase = getSupabaseClient();
       // Fetch user role and local_id
       const { data: userData } = await supabase
         .from('users')
@@ -74,6 +75,7 @@ export default function HistoryViewer() {
       const counts: { [id: string]: number } = {};
       await Promise.all(grievances.map(async (g) => {
         if (!g.id) return;
+        const supabase = getSupabaseClient();
         const { data } = await supabase.storage
           .from("grievance_files")
           .list(`grievance_files/${g.id}`);

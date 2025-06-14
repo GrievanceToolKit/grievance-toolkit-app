@@ -1,16 +1,30 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import OpenAI from 'openai';
 import { Resend } from 'resend';
 import { extractTextFromFile } from '@/lib/extractTextFromFile';
 import { generateGrievancePDF } from '@/lib/pdf/generator';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 type Violation = { article_number: string; article_title: string; violation_reason: string };
 
 export async function POST(request: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('❌ OPENAI_API_KEY is missing.');
+    return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
+  }
+  if (!process.env.RESEND_API_KEY) {
+    console.error('❌ RESEND_API_KEY is missing.');
+    return NextResponse.json({ error: 'Missing Resend API key' }, { status: 500 });
+  }
+  let supabase;
+  try {
+    supabase = getSupabaseClient();
+  } catch {
+    console.error('❌ Supabase env vars are missing.');
+    return NextResponse.json({ error: 'Missing Supabase credentials' }, { status: 500 });
+  }
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { grievanceId, mbaEmail } = await request.json();
     if (!grievanceId || !mbaEmail) {

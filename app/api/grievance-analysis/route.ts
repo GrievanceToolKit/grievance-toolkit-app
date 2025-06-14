@@ -1,9 +1,7 @@
-import { supabase } from "@/lib/supabaseClient";
 import OpenAI from "openai";
 import { NextResponse, NextRequest } from "next/server";
 import { extractTextFromFile } from "@/lib/extractTextFromFile";
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { createClient } from "@supabase/supabase-js";
 
 const systemPrompt = `
 You are a USPS arbitration grievance writer trained under the APWU National Agreement. Generate a full grievance with these sections:
@@ -41,6 +39,18 @@ async function extractUserIdsFromRequest(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('❌ OPENAI_API_KEY is missing.');
+    return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
+  }
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Missing Supabase env vars");
+  }
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const body = await request.json();
   const { summary, description, grievanceId, case_number } = body;
   if (!summary || !description) {

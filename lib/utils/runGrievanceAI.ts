@@ -8,6 +8,9 @@ export interface GrievanceAIPromptMessage {
 }
 
 export async function runGrievanceAI(messages: GrievanceAIPromptMessage[]) {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is missing');
+  }
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   // Only use 'system' and 'user' roles for OpenAI API compatibility
   const finalMessages: ChatCompletionMessageParam[] = [

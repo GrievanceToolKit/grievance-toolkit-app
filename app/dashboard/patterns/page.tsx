@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import { Button } from '@/components/ui/button';
 
 interface TrainingExample {
@@ -47,6 +47,7 @@ export default function PatternsPage() {
   useEffect(() => {
     async function fetchRows() {
       setLoading(true);
+      const supabase = getSupabaseClient();
       const { data, error } = await supabase
         .from('ai_training_queue')
         .select('id,steward_correction,created_at')
