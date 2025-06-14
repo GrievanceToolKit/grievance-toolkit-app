@@ -1,7 +1,7 @@
 "use client";
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { sendUnionLinkEmail } from '@/lib/sendUnionLinkEmail';
 
 interface Steward {
@@ -28,6 +28,7 @@ export default function SendToStewardForm({ grievanceId, localId, grievanceSumma
   useEffect(() => {
     async function fetchStewards() {
       setLoading(true);
+      const supabase = createClientComponentClient();
       const { data, error } = await supabase
         .from('users')
         .select('id, first_name, last_name, email')
@@ -51,6 +52,7 @@ export default function SendToStewardForm({ grievanceId, localId, grievanceSumma
       setSubmitting(false);
       return;
     }
+    const supabase = createClientComponentClient();
     const { error } = await supabase.from('union_links').insert({
       created_by_user_id: user?.id,
       forwarded_to_user_id: selectedSteward,

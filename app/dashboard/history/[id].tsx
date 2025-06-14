@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from '@clerk/nextjs';
 // @ts-expect-error: html2pdf.js has no types, see types/html2pdf.d.ts
 import html2pdf from "html2pdf.js";
@@ -50,6 +50,7 @@ export default function GrievanceDetailPage() {
     async function fetchGrievance() {
       if (!grievanceId) return;
       setLoading(true);
+      const supabase = createClientComponentClient();
       const { data, error } = await supabase
         .from("grievances")
         .select("*")
@@ -65,6 +66,7 @@ export default function GrievanceDetailPage() {
   useEffect(() => {
     async function fetchFiles() {
       if (!grievanceId) return;
+      const supabase = createClientComponentClient();
       const { data } = await supabase.storage
         .from("denials")
         .list(`denials/${grievanceId}`);
@@ -80,6 +82,7 @@ export default function GrievanceDetailPage() {
   useEffect(() => {
     async function fetchUpdatedByName() {
       if (grievance && grievance.updated_by_user_id) {
+        const supabase = createClientComponentClient();
         const { data: userData } = await supabase
           .from("users")
           .select("name")
@@ -119,6 +122,7 @@ export default function GrievanceDetailPage() {
     if (!grievance) return;
     setSavingNotes(true);
     setNotesStatus("");
+    const supabase = createClientComponentClient();
     const { error } = await supabase
       .from("grievances")
       .update({ grievance_notes: notes })
@@ -131,6 +135,7 @@ export default function GrievanceDetailPage() {
     setFeedback(value);
     setFeedbackStatus("");
     if (!grievance) return;
+    const supabase = createClientComponentClient();
     const { error } = await supabase
       .from("grievances")
       .update({ memo_feedback: value })

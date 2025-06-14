@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse, NextRequest } from "next/server";
 import { extractTextFromFile } from "@/lib/extractTextFromFile";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 const systemPrompt = `
 You are a USPS arbitration grievance writer trained under the APWU National Agreement. Generate a full grievance with these sections:
@@ -19,9 +19,8 @@ You are a USPS arbitration grievance writer trained under the APWU National Agre
 Format clearly, use bold section headers, no disclaimers. Language must be professional, factual, and legally persuasive.
 `;
 
-
 // Helper to extract Clerk and Supabase user IDs from the request
-async function extractUserIdsFromRequest(request: NextRequest, supabase: ReturnType<typeof createClient>) {
+async function extractUserIdsFromRequest(request: NextRequest, supabase: SupabaseClient<any, any, any>) {
   const clerkUserId: string | null = null;
   let supabaseUserId: string | null = null;
   // Only fallback JWT logic, since getAuth is not available

@@ -1,0 +1,14 @@
+ .github/workflows/vercel-check.yml          |  26 ++
+ app/api/grievance-analysis/route.ts         |   5 +-
+ app/components/HelpTooltips.tsx             |  19 +
+ app/dashboard/history/[id].tsx              |   7 +-
+ app/dashboard/lmou.tsx                      |   4 +-
+ build.log                                   |   0
+ codex-runner.ts                             |  52 +++
+ codex-tasks.json                            |  22 +
+ components/grievances/SendToStewardForm.tsx |   4 +-
+ kairos-prompt.md                            |  51 +++
+ package-lock.json                           | 670 +++++++++++++++++++++++++++-
+ package.json                                |   6 +-
+ types/html2pdf.d.ts                         |   5 +-
+ 13 files changed, 858 insertions(+), 13 deletions(-)

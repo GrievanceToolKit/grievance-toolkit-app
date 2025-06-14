@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@clerk/nextjs";
 
 interface LMOU {
@@ -28,6 +28,7 @@ export default function LMOUViewer() {
       if (!user) return;
       setLoading(true);
       setError("");
+      const supabase = createClientComponentClient();
       // Fetch user role
       const { data: userData } = await supabase
         .from("users")
@@ -78,6 +79,7 @@ export default function LMOUViewer() {
   const handleMarkOutdated = async () => {
     if (!lmou) return;
     setMarkingOutdated(true);
+    const supabase = createClientComponentClient();
     const { error } = await supabase
       .from("lmou_library")
       .update({ status: "outdated" })
