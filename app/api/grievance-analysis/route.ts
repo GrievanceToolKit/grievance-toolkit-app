@@ -21,7 +21,7 @@ Format clearly, use bold section headers, no disclaimers. Language must be profe
 
 
 // Helper to extract Clerk and Supabase user IDs from the request
-async function extractUserIdsFromRequest(request: NextRequest) {
+async function extractUserIdsFromRequest(request: NextRequest, supabase: ReturnType<typeof createClient>) {
   const clerkUserId: string | null = null;
   let supabaseUserId: string | null = null;
   // Only fallback JWT logic, since getAuth is not available
@@ -43,13 +43,10 @@ export async function POST(request: NextRequest) {
     console.error('❌ OPENAI_API_KEY is missing.');
     return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
   }
-  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error("Missing Supabase env vars");
-  }
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseUrl = process.env.SUPABASE_URL!;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  if (!supabaseUrl || !supabaseKey) throw new Error("Supabase env vars missing");
+  const supabase = createClient(supabaseUrl, supabaseKey);
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const body = await request.json();
   const { summary, description, grievanceId, case_number } = body;
@@ -58,7 +55,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Extract user IDs
-  const { clerkUserId, supabaseUserId } = await extractUserIdsFromRequest(request);
+  const { clerkUserId, supabaseUserId } = await extractUserIdsFromRequest(request, supabase);
   if (!clerkUserId && !supabaseUserId) {
     return NextResponse.json({ error: "Missing Clerk and Supabase user ID" }, { status: 401 });
   }
