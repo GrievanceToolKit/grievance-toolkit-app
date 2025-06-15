@@ -5,7 +5,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from '@clerk/nextjs';
 // @ts-expect-error: html2pdf.js has no types, see types/html2pdf.d.ts
 import html2pdf from "html2pdf.js";
-import { toast } from 'react-hot-toast';
 import dynamic from "next/dynamic";
 const ResolutionModal = dynamic(() => import("@/components/ResolutionModal"), { ssr: false });
 
@@ -48,9 +47,6 @@ export default function GrievanceDetailPage() {
   const [updatedByName, setUpdatedByName] = useState("");
   const [feedback, setFeedback] = useState(grievance?.memo_feedback || "");
   const [feedbackStatus, setFeedbackStatus] = useState("");
-  const [mbaEmail, setMbaEmail] = useState('');
-  const [step3Status, setStep3Status] = useState('');
-  const [step3Loading, setStep3Loading] = useState(false);
   const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
 
   // Use params for dynamic route [id].tsx

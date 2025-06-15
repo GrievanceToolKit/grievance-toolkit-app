@@ -11,11 +11,6 @@ interface Violation {
   violation_reason: string;
 }
 
-interface AIResponse {
-  memo: string;
-  violations: Violation[];
-}
-
 const USPS_CRAFTS = [
   'Clerk',
   'BEM',
@@ -90,8 +85,8 @@ export default function GrievanceClient() {
       setMemo(data.memo || '');
       setViolations(data.violations || []);
       console.log('🧠 Violations received:', data.violations);
-    } catch (err: any) {
-      setError(err.message || 'Unknown error');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -121,10 +116,10 @@ export default function GrievanceClient() {
         // router.push('/dashboard/history');
       } else {
         const err = await res.json();
-        toast.error('❌ Submission failed: ' + (err?.error || 'Unknown error'));
+        toast.error('❌ Submission failed: ' + (err instanceof Error ? err.message : (err && typeof err === 'object' && 'error' in err ? (err as { error?: string }).error : 'Unknown error')));
       }
-    } catch (err: any) {
-      toast.error('❌ Submission error: ' + (err.message || err));
+    } catch (err: unknown) {
+      toast.error('❌ Submission error: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setSubmitting(false);
     }
@@ -133,7 +128,7 @@ export default function GrievanceClient() {
   const handleDownloadPDF = async () => {
     const element = document.getElementById('memo-section');
     if (element) {
-      // @ts-ignore
+      // @ts-expect-error: html2pdf.js has no types, see types/html2pdf.d.ts
       const html2pdf = (await import('html2pdf.js')).default;
       html2pdf().from(element).save();
       console.log('[PDF Export] Finished generating grievance PDF');

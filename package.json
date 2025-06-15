@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "NEXT_IGNORE_ESLINT=true next build",
+    "build": "cross-env NEXT_IGNORE_ESLINT=true next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -48,6 +48,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "eslint-formatter-codeframe": "^7.32.1",

@@ -55,7 +55,7 @@ const ResolutionModal: React.FC<ResolutionModalProps> = ({
       } else {
         setError("AI could not generate a resolution memo.");
       }
-    } catch (err) {
+    } catch {
       setError("Error generating AI resolution.");
     } finally {
       setLoadingAI(false);
@@ -88,7 +88,7 @@ const ResolutionModal: React.FC<ResolutionModalProps> = ({
         const data = await res.json();
         setError(data.error || "Failed to submit resolution.");
       }
-    } catch (err) {
+    } catch {
       setError("Error submitting resolution.");
     } finally {
       setSubmitting(false);

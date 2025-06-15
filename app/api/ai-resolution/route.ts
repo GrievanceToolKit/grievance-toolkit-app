@@ -18,7 +18,7 @@ ${stewardText}
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, case_number, grievant_name } = await request.json();
+    const { text } = await request.json();
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({ error: "Missing OPENAI_API_KEY" }, { status: 500 });
     }

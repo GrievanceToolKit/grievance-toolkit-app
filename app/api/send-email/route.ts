@@ -29,9 +29,13 @@ export async function POST(request: NextRequest) {
     }
     // Bypass Resend SDK type error; see send-resolution-email/route.ts for details
     // TODO: Replace 'as any' with a stricter type when Resend SDK typings are fixed
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await resend.emails.send(payload as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((result as any).error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.error("[send-email] Resend error:", (result as any).error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return NextResponse.json({ error: (result as any).error }, { status: 500 });
     }
     return NextResponse.json({ success: true, payload: process.env.NODE_ENV !== "production" ? payload : undefined });

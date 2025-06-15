@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await context.params;
     if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       return NextResponse.json({ error: "Missing Supabase env vars" }, { status: 500 });
     }
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const { data, error } = await supabase
       .from("grievances")
       .select("resolution_text, steward_notes, resolution_file_url, resolved_at, is_resolved")
-      .eq("id", params.id)
+      .eq("id", id)
       .single();
     if (error) throw error;
     return NextResponse.json({ ...data });

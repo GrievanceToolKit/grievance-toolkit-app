@@ -37,9 +37,13 @@ export async function POST(request: NextRequest) {
       console.log("[send-resolution-email] Payload:", payload);
     }
     // Bypass type error with 'as any' since Resend API works with html/text
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await resend.emails.send(payload as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (result && (result as any).error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.error("[send-resolution-email] Resend error:", (result as any).error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return NextResponse.json({ error: (result as any).error }, { status: 500 });
     }
     return NextResponse.json({ success: true });

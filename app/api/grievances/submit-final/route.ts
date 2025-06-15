@@ -47,8 +47,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error("[submit-final] API error:", err);
-    return NextResponse.json({ error: err.message || "Unknown error" }, { status: 500 });
+  } catch (err: unknown) {
+    // TODO: Replace 'unknown' with a more specific error type if possible
+    const errorMsg = err instanceof Error ? err.message : "Unknown error";
+    console.error("[submit-final] API error:", errorMsg);
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }

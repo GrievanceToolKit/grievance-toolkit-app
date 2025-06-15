@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 
 // Helper: upload file to Supabase Storage
 async function uploadFile(supabase: SupabaseClient, grievanceId: string, file: File): Promise<string> {
@@ -20,7 +19,6 @@ export async function POST(request: NextRequest) {
     const file = body.get("uploadedFile");
     const userEmail = body.get("userEmail") as string;
     const memberEmail = body.get("memberEmail") as string | null;
-    const managerEmail = body.get("managerEmail") as string | null;
     const grievanceType = body.get("grievanceType") as string;
     const memoHtml = body.get("memoHtml") as string;
     const memoText = body.get("memoText") as string;

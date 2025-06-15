@@ -22,7 +22,7 @@ export async function ensureUserExists() {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Check if user exists
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("users")
     .select("id")
     .eq("clerk_user_id", userId)

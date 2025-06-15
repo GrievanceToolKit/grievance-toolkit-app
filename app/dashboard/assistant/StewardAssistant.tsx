@@ -51,8 +51,9 @@ export function StewardAssistant() {
       if (!res.ok) throw new Error("Failed to get AI analysis");
       const data = await res.json();
       setAIResponse(data);
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch (err: unknown) {
+      // TODO: Replace 'unknown' with a more specific error type if possible
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }

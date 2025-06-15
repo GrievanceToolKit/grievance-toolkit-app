@@ -41,7 +41,7 @@ export default function EscalationPage() {
   const [publicUrls, setPublicUrls] = useState<Record<string, string>>({});
   const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
   const [isResolved, setIsResolved] = useState(false);
-  const [resolutionFileUrl, setResolutionFileUrl] = useState<string | undefined>(undefined);
+  const [resolutionFileUrl, setResolutionFileUrl] = useState<string>("");
 
   const manualTextFallback = step1Denial;
   const step1DenialText = editableDenialText || manualTextFallback;
@@ -216,6 +216,17 @@ export default function EscalationPage() {
     setUploadStatus(uploadSuccess ? 'success' : 'error');
     setUploadMessage(uploadMsg.join(' | '));
   };
+
+  useEffect(() => {
+    if (isResolved && grievanceId) {
+      // Fetch the resolution file URL from the API
+      fetch(`/api/grievances/${grievanceId}/resolution`)
+        .then(res => res.json())
+        .then(data => {
+          setResolutionFileUrl(data.resolution_file_url || "");
+        });
+    }
+  }, [isResolved, grievanceId]);
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
