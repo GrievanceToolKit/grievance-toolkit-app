@@ -61,8 +61,10 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error("[submit-resolution] API error:", err);
-    return NextResponse.json({ error: err.message || "Unknown error" }, { status: 500 });
+  } catch (err: unknown) {
+    // TODO: Replace 'unknown' with a more specific error type if possible
+    const errorMsg = err instanceof Error ? err.message : "Unknown error";
+    console.error("[submit-resolution] API error:", errorMsg);
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }

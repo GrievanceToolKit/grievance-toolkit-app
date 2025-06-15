@@ -34,8 +34,10 @@ export async function POST(request: NextRequest) {
     });
     const aiResolution = completion.choices[0]?.message?.content || "";
     return NextResponse.json({ aiResolution });
-  } catch (err: any) {
-    console.error("[ai-resolution] API error:", err);
-    return NextResponse.json({ error: err.message || "Unknown error" }, { status: 500 });
+  } catch (err: unknown) {
+    // TODO: Replace 'unknown' with a more specific error type if possible
+    const errorMsg = err instanceof Error ? err.message : "Unknown error";
+    console.error("[ai-resolution] API error:", errorMsg);
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }

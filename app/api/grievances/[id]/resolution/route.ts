@@ -14,8 +14,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       .single();
     if (error) throw error;
     return NextResponse.json({ ...data });
-  } catch (err: any) {
-    console.error("[get-resolution] API error:", err);
-    return NextResponse.json({ error: err.message || "Unknown error" }, { status: 500 });
+  } catch (err: unknown) {
+    // TODO: Replace 'unknown' with a more specific error type if possible
+    const errorMsg = err instanceof Error ? err.message : "Unknown error";
+    console.error("[get-resolution] API error:", errorMsg);
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
