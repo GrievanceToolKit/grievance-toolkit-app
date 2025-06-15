@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import dynamic from "next/dynamic";
+const ResolutionModal = dynamic(() => import("@/components/ResolutionModal"), { ssr: false });
 
 // Extraction helpers (to be replaced with real implementations or API calls)
 async function extractPdfText(): Promise<string> {
@@ -37,6 +39,9 @@ export default function EscalationPage() {
   const [autoExportEnabled, setAutoExportEnabled] = useState(true);
   const [stewardInfo, setStewardInfo] = useState<{ name: string; local_name: string } | null>(null);
   const [publicUrls, setPublicUrls] = useState<Record<string, string>>({});
+  const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
+  const [isResolved, setIsResolved] = useState(false);
+  const [resolutionFileUrl, setResolutionFileUrl] = useState<string | undefined>(undefined);
 
   const manualTextFallback = step1Denial;
   const step1DenialText = editableDenialText || manualTextFallback;
@@ -342,6 +347,40 @@ export default function EscalationPage() {
               <p className="text-sm mt-2">Date: ____________________</p>
             </div>
           </div>
+        </div>
+      )}
+
+      {step2Memo && !isResolved && (
+        <div className="mt-6">
+          <button
+            className="bg-yellow-600 text-white px-4 py-2 rounded"
+            onClick={() => setResolutionModalOpen(true)}
+          >
+            ✍️ Resolve Issue
+          </button>
+          <ResolutionModal
+            grievanceId={grievanceId}
+            caseNumber={grievanceId}
+            open={resolutionModalOpen}
+            onClose={() => setResolutionModalOpen(false)}
+            onResolved={() => { setResolutionModalOpen(false); setIsResolved(true); }}
+            grievanceType={"individual"}
+            stewardEmail={stewardInfo?.name || ""}
+          />
+        </div>
+      )}
+      {isResolved && (
+        <div className="mt-6">
+          <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold mb-2">🟢 Resolved</span>
+          {resolutionFileUrl && (
+            <a
+              href={resolutionFileUrl}
+              target="_blank"
+              className="ml-2 bg-gray-700 text-white px-3 py-1 rounded"
+            >
+              📥 Download Agreement File
+            </a>
+          )}
         </div>
       )}
 

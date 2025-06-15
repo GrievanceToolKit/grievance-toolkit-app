@@ -6,6 +6,8 @@ import { useUser } from '@clerk/nextjs';
 // @ts-expect-error: html2pdf.js has no types, see types/html2pdf.d.ts
 import html2pdf from "html2pdf.js";
 import { toast } from 'react-hot-toast';
+import dynamic from "next/dynamic";
+const ResolutionModal = dynamic(() => import("@/components/ResolutionModal"), { ssr: false });
 
 interface Grievance {
   id: string;
@@ -23,6 +25,13 @@ interface Grievance {
   created_by_user_id?: string;
   local_id?: string;
   status?: string;
+  // Resolution fields
+  is_resolved?: boolean;
+  resolved_at?: string;
+  resolution_file_url?: string;
+  grievance_type?: string;
+  member_email?: string;
+  supervisor_email?: string;
 }
 
 export default function GrievanceDetailPage() {
@@ -42,6 +51,7 @@ export default function GrievanceDetailPage() {
   const [mbaEmail, setMbaEmail] = useState('');
   const [step3Status, setStep3Status] = useState('');
   const [step3Loading, setStep3Loading] = useState(false);
+  const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
 
   // Use params for dynamic route [id].tsx
   const grievanceId = id || "";
@@ -289,50 +299,48 @@ export default function GrievanceDetailPage() {
         </button>
         {feedbackStatus && <span className="ml-4 text-xs">{feedbackStatus}</span>}
       </div>
-      {/* Step 3 Arbitration Audit Trigger */}
-      <div className="mt-8 bg-yellow-50 border border-yellow-300 rounded p-4">
-        <h3 className="font-bold mb-2">Step 3: Arbitration Audit & MBA Forwarding</h3>
-        <label className="block mb-1 font-medium">MBA Email</label>
-        <input
-          type="email"
-          className="border px-2 py-1 rounded w-full mb-2"
-          value={mbaEmail}
-          onChange={e => setMbaEmail(e.target.value)}
-          placeholder="mba@example.com"
-          disabled={step3Loading}
-        />
-        <button
-          className="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-800 disabled:opacity-60"
-          disabled={!mbaEmail || step3Loading}
-          onClick={async () => {
-            setStep3Loading(true);
-            setStep3Status('');
-            try {
-              const res = await fetch('/api/step3-audit.ts', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ grievanceId, mbaEmail }),
-              });
-              const data = await res.json();
-              if (data.auditMemo && data.forwardedToMBA) {
-                setStep3Status('✅ Sent to MBA!');
-                toast.success('✅ Arbitration audit sent to MBA');
-              } else if (data.auditMemo) {
-                setStep3Status('⚠️ Audit generated, but email failed.');
-              } else {
-                setStep3Status(data.error || '❌ Failed to generate audit.');
-              }
-            } catch {
-              setStep3Status('❌ Failed to generate audit.');
-            } finally {
-              setStep3Loading(false);
-            }
-          }}
-        >
-          {step3Loading ? 'Sending...' : '📤 Forward to MBA'}
-        </button>
-        {step3Status && <div className="mt-2 text-sm">{step3Status}</div>}
-      </div>
+      {/* Resolution Section */}
+      {grievance.is_resolved ? (
+        <div className="mt-6">
+          <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold mb-2">🟢 Resolved</span>
+          <button
+            className="ml-2 bg-blue-600 text-white px-3 py-1 rounded"
+            onClick={() => {/* TODO: Show resolution memo and files modal */}}
+          >
+            📄 View Resolution
+          </button>
+          {grievance.resolution_file_url && (
+            <a
+              href={grievance.resolution_file_url}
+              target="_blank"
+              className="ml-2 bg-gray-700 text-white px-3 py-1 rounded"
+            >
+              📥 Download Agreement File
+            </a>
+          )}
+        </div>
+      ) : (
+        <div className="mt-6">
+          <button
+            className="bg-yellow-600 text-white px-4 py-2 rounded"
+            onClick={() => setResolutionModalOpen(true)}
+          >
+            ✍️ Resolve Issue
+          </button>
+          <ResolutionModal
+            grievanceId={grievance.id}
+            caseNumber={grievance.case_number || grievance.id}
+            grievantName={grievance.title}
+            open={resolutionModalOpen}
+            onClose={() => setResolutionModalOpen(false)}
+            onResolved={() => { setResolutionModalOpen(false); setGrievance({ ...grievance, is_resolved: true, status: 'resolved', resolved_at: new Date().toISOString() }); }}
+            grievanceType={grievance.grievance_type || 'individual'}
+            stewardEmail={user?.primaryEmailAddress?.emailAddress || ''}
+            memberEmail={grievance.member_email}
+            supervisorEmail={grievance.supervisor_email}
+          />
+        </div>
+      )}
       <p className="text-sm text-gray-500 mt-4">
         Last updated by: {updatedByName || grievance.updated_by_user_id || "Unknown"} on {formatDate(grievance.updated_at || "")}
       </p>

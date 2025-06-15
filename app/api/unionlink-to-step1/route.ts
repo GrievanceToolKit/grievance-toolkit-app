@@ -10,8 +10,6 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error("Supabase client cannot be initialized. Missing env vars.");
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function POST(request: Request) {
   const { userId } = await auth();
   const { unionLinkId } = await request.json();
@@ -19,6 +17,8 @@ export async function POST(request: Request) {
   if (!userId || !unionLinkId) {
     return NextResponse.json({ error: 'Missing user or unionLinkId' }, { status: 400 });
   }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Fetch union link data
   const { data: unionLink } = await supabase
@@ -37,6 +37,7 @@ export async function POST(request: Request) {
     summary: unionLink.grievance_summary,
     description: unionLink.grievance_description,
     created_by_user_id: userId,
+    user_id: userId,
     local_id: unionLink.local_id,
     case_number: `GT-${Math.floor(100000 + Math.random() * 900000)}`,
   }).select().single();
